@@ -9,7 +9,20 @@ To explore this challenge, we introduce Delphi, an experimental framework based 
 Yet, Delphi is not perfect, exhibiting susceptibility to pervasive biases and inconsistencies. Despite these shortcomings, we demonstrate positive use cases of Delphi, including using it as a component model within other imperfect AI systems. Importantly, we interpret the operationalization
 
 
-## You can access the Commonsense Norm Bank dataset by [filling out this form](https://forms.gle/VoAVuPUJFNChWhSj8).
+## Data and Model Access
+You can access the Commonsense Norm Bank dataset by [filling out this form](https://forms.gle/VoAVuPUJFNChWhSj8).
 
-## For accessing the Delphi model checkpoints and API calls please feel free to reach out to Liwei Jiang at [lwjiang@cs.washington.edu](lwjiang@cs.washington.edu).
+For accessing the Delphi model checkpoints and API calls please feel free to reach out to Liwei Jiang at [lwjiang@cs.washington.edu](lwjiang@cs.washington.edu).
+
+If you find our paper or data useful, please cite the paper:
+```
+@article{jiang2022machines,
+      title={Can Machines Learn Morality? The Delphi Experiment}, 
+      author={Liwei Jiang and Jena D. Hwang and Chandra Bhagavatula and Ronan Le Bras and Jenny Liang and Jesse Dodge and Keisuke Sakaguchi and Maxwell Forbes and Jon Borchardt and Saadia Gabriel and Yulia Tsvetkov and Oren Etzioni and Maarten Sap and Regina Rini and Yejin Choi},
+      year={2022},
+      eprint={2110.07574},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+```
 
