@@ -1,6 +1,8 @@
 # Can Machines Learn Morality? The Delphi Experiment
 
-This is the official repository for our preprint: Liwei Jiang, Jena D. Hwang, Chandra Bhagavatula, Ronan Le Bras, Jenny Liang, Jesse Dodge, Keisuke Sakaguchi, Maxwell Forbes, Jon Borchardt, Saadia Gabriel, Yulia Tsvetkov, Oren Etzioni, Maarten Sap, Regina Rini, Yejin Choi. [Can Machines Learn Morality? The Delphi Experiment](https://arxiv.org/abs/2110.07574). 2022. 
+This is the official repository for our preprint:
+
+Liwei Jiang, Jena D. Hwang, Chandra Bhagavatula, Ronan Le Bras, Jenny Liang, Jesse Dodge, Keisuke Sakaguchi, Maxwell Forbes, Jon Borchardt, Saadia Gabriel, Yulia Tsvetkov, Oren Etzioni, Maarten Sap, Regina Rini, Yejin Choi. [Can Machines Learn Morality? The Delphi Experiment](https://arxiv.org/abs/2110.07574). 2022. 
 
 As AI systems become increasingly powerful and pervasive, there are growing concerns about machines’ morality—or lack thereof. Existing AI systems deployed to millions of users are already making decisions loaded with moral implications, yet, moral questions are among the most intensely debated the world over. This poses a seemingly impossible challenge: teaching machines morality, while humanity continues to grapple with it.
 
