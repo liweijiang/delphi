@@ -9,6 +9,7 @@ acc_type = {"ethics_deontology": 4,
             "ethics_util": "exact",
             "ethics_cm": "exact"}
 
+
 def get_gold_class(training_data, data_split):
     """
         Get gold inputs and targets class labels; format (<class>1</class> <text> </text>)
@@ -28,7 +29,8 @@ def get_gold_class(training_data, data_split):
     inputs = [i.split("[moral_single]: ")[-1] for i in inputs_all]
 
     targets_all = list(df_inputs["targets"])
-    targets = [int(i.split("</class>")[0].split("<class>")[-1]) for i in targets_all]
+    targets = [int(i.split("</class>")[0].split("<class>")[-1])
+               for i in targets_all]
     return inputs, targets
 
 
@@ -36,16 +38,20 @@ def get_pred_class(bucket, base_path, training_data, check_point, base_model):
     """
         Get preds class labels
     """
-    preds_blob = bucket.get_blob(base_path + f"{training_data}_{check_point}_predictions")
-    preds_blob_list = preds_blob.download_as_string().decode('utf-8').split("\n")[1:]
+    preds_blob = bucket.get_blob(
+        base_path + f"{training_data}_{check_point}_predictions")
+    preds_blob_list = preds_blob.download_as_string().decode(
+        'utf-8').split("\n")[1:]
 
     preds_class = []
     for i in preds_blob_list:
         try:
             if "v10" in base_model:
-                preds_class.append(int(i.split("[/class]")[0].split("[class]")[-1]))
+                preds_class.append(
+                    int(i.split("[/class]")[0].split("[class]")[-1]))
             else:
-                preds_class.append(int(i.split(" ⁇ /class>")[0].split(" ⁇ class>")[-1]))
+                preds_class.append(
+                    int(i.split(" ⁇ /class>")[0].split(" ⁇ class>")[-1]))
         except:
             print("output form not identifiable:", i)
             preds_class.append(99)
@@ -63,7 +69,8 @@ def get_ethics_accuracy(targets, preds, accuracy_type="exact"):
             elif accuracy_type == "non conflict":
                 accuracies.append(int(t_c * p_c >= 0))
             else:
-                accuracies.append(not int((t_c == -1 or p_c == -1) and (t_c * p_c != 1)))
+                accuracies.append(
+                    not int((t_c == -1 or p_c == -1) and (t_c * p_c != 1)))
 
     if accuracy_type == 4:
         group_acc = []
@@ -104,28 +111,23 @@ def main_get_accuracy(base_path, data_split, check_points=None, is_save_results=
     bucket = client.get_bucket(bucket_name)
 
     if check_points == None:
-        check_points = get_check_points(client, bucket_name, result_prefix, after_check_point=-1)[1:]
-    # check_points.sort(reverse=True)
+        check_points = get_check_points(
+            client, bucket_name, result_prefix, after_check_point=-1)[1:]
 
     for check_point in check_points:
         inputs, targets = get_gold_class(training_data, data_split)
-        preds = get_pred_class(bucket, base_path, training_data, check_point, base_model)
-        # print(preds)
-        # print(inputs)
+        preds = get_pred_class(
+            bucket, base_path, training_data, check_point, base_model)
         if base_model == "v10-delphi" and "util" not in training_data:
             preds_new = [t - 1 for t in preds]
             preds = preds_new
         index_to_remove = []
         for i, p in enumerate(preds):
             if p not in [-1, 1, 2]:
-                # index_to_remove.append(i)
                 print("bad:", i, p)
-                # preds[i] = 0
-        # targets = np.delete(targets, index_to_remove).tolist()
-        # preds = np.delete(preds, index_to_remove).tolist()
 
-        acc = get_ethics_accuracy(targets, preds, accuracy_type=acc_type[training_data.replace("new_", "")])
-        # acc = get_accuracy(targets, preds, accuracy_type="exact")
+        acc = get_ethics_accuracy(
+            targets, preds, accuracy_type=acc_type[training_data.replace("new_", "")])
         print(f"{check_point}: accuracy -- {acc}")
 
         if is_save_results:
@@ -133,10 +135,9 @@ def main_get_accuracy(base_path, data_split, check_points=None, is_save_results=
             df_data["input"] = inputs
             df_data["target"] = targets
             df_data["pred"] = preds
-            # print(df_data)
 
-            # print(f"few-{training_data}-{base_model}.tsv")
-            df_data.to_csv(f"100_shot-{training_data}-{base_model}-{data_split}.tsv", index=False, sep="\t")
+            df_data.to_csv(
+                f"100_shot-{training_data}-{base_model}-{data_split}.tsv", index=False, sep="\t")
 
 
 def main_all(training_data):
@@ -148,81 +149,72 @@ def main_all(training_data):
                                        "11B": [1153000]},
 
                          "ethics_deontology": {"v10-delphi": [],
-                                       "v9-delphi": [1361600],
-                                       "v9-delphi-new": [1315700],
-                                       "unicorn-pt": [1157600],
-                                       "11B": [1387600]},
+                                               "v9-delphi": [1361600],
+                                               "v9-delphi-new": [1315700],
+                                               "unicorn-pt": [1157600],
+                                               "11B": [1387600]},
 
                          "ethics_justice": {"v10-delphi": [],
-                                       "v9-delphi": [1356500],
-                                       "v9-delphi-new": [1249400],
-                                       "unicorn-pt": [1137200],
-                                       "11B": [1112200]},
+                                            "v9-delphi": [1356500],
+                                            "v9-delphi-new": [1249400],
+                                            "unicorn-pt": [1137200],
+                                            "11B": [1112200]},
 
                          "ethics_virtue": {"v10-delphi": [],
-                                       "v9-delphi": [1356500],
-                                       "v9-delphi-new": [1336100],
-                                       "unicorn-pt": [1050500],
-                                       "11B": [1040800]},
+                                           "v9-delphi": [1356500],
+                                           "v9-delphi-new": [1336100],
+                                           "unicorn-pt": [1050500],
+                                           "11B": [1040800]},
 
                          "ethics_util": {"v10-delphi": [],
-                                       "v9-delphi": [1351400],
-                                       "v9-delphi-new": [1249400],
-                                       "unicorn-pt": [1035200],
-                                       "11B": [1015300]},
+                                         "v9-delphi": [1351400],
+                                         "v9-delphi-new": [1249400],
+                                         "unicorn-pt": [1035200],
+                                         "11B": [1015300]},
 
 
                          "ethics_cm_100_shot": {"v10-delphi": [],
-                                       "v9-delphi": [1315700],
-                                       "v9-delphi-new": [1264700],
-                                       "unicorn-pt": [1055600],
-                                       "11B": [1112200]},
+                                                "v9-delphi": [1315700],
+                                                "v9-delphi-new": [1264700],
+                                                "unicorn-pt": [1055600],
+                                                "11B": [1112200]},
 
                          "ethics_deontology_100_shot": {"v10-delphi": [],
-                                       "v9-delphi": [1274900],
-                                       "v9-delphi-new": [1315700],
-                                       "unicorn-pt": [1030100],
-                                       "11B": [1275400]},
+                                                        "v9-delphi": [1274900],
+                                                        "v9-delphi-new": [1315700],
+                                                        "unicorn-pt": [1030100],
+                                                        "11B": [1275400]},
 
                          "ethics_justice_100_shot": {"v10-delphi": [],
-                                       "v9-delphi": [1290200],
-                                       "v9-delphi-new": [1331000],
-                                       "unicorn-pt": [1065800],
-                                       "11B": [1504900]},
+                                                     "v9-delphi": [1290200],
+                                                     "v9-delphi-new": [1331000],
+                                                     "unicorn-pt": [1065800],
+                                                     "11B": [1504900]},
 
                          "ethics_virtue_100_shot": {"v10-delphi": [],
-                                       "v9-delphi": [1295300],
-                                       "v9-delphi-new": [1264700],
-                                       "unicorn-pt": [1060700],
-                                       "11B": [1020400]},
+                                                    "v9-delphi": [1295300],
+                                                    "v9-delphi-new": [1264700],
+                                                    "unicorn-pt": [1060700],
+                                                    "11B": [1020400]},
 
                          "ethics_util_100_shot": {"v10-delphi": [],
-                                       "v9-delphi": [1295300],
-                                       "v9-delphi-new": [1341200],
-                                       "unicorn-pt": [1076000],
-                                       "11B": [1275400]},
+                                                  "v9-delphi": [1295300],
+                                                  "v9-delphi-new": [1341200],
+                                                  "unicorn-pt": [1076000],
+                                                  "11B": [1275400]},
                          }
 
-    for base_model in ["v9-delphi-new", "unicorn-pt", "11B"]: # "v10-delphi", "v9-delphi", "unicorn-pt", "11B" "v10-delphi", "v9-delphi-new", "unicorn-pt", "11B",
+    for base_model in ["v9-delphi-new", "unicorn-pt", "11B"]:
         print("=" * 10, base_model)
         base_path = f"ai2-tpu-europe-west4/projects/liweij/mosaic-commonsense-morality/model/finetune/{base_model}/{training_data}/lr-0.0002_bs-16/"
-        # check_points = None
         check_points = base_model_2_ckpt[training_data][base_model]
         main_get_accuracy(base_path, "validation", check_points)
-        # check_points = base_model_2_ckpt[training_data][base_model]
         main_get_accuracy(base_path, "test", check_points)
 
 
 if __name__ == "__main__":
-    # main_all("ethics_cm")
-    # main_all("ethics_deontology")
-    # main_all("ethics_justice")
-    # main_all("ethics_virtue")
-    # main_all("ethics_util")
-
     main_all("ethics_cm_100_shot")
     main_all("ethics_deontology_100_shot")
     main_all("ethics_justice_100_shot")
     main_all("ethics_virtue_100_shot")
     main_all("ethics_util_100_shot")
-

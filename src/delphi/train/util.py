@@ -26,7 +26,8 @@ def print_task_examples(task_name, split="validation", num_ex=1):
     """
     print("#" * 20, task_name, "#" * 20)
     task = seqio.TaskRegistry.get(task_name)
-    ds = task.get_dataset(split=split, sequence_length={"inputs": 512, "targets": 128})
+    ds = task.get_dataset(split=split, sequence_length={
+                          "inputs": 512, "targets": 128})
     for i, ex in enumerate(tfds.as_numpy(ds.take(num_ex))):
         print(i, ex)
     print("test", task.num_input_examples("test"))
@@ -91,7 +92,8 @@ def get_result_check_points(result_prefix, split, eval_data_type, after_check_po
     for blob in client.list_blobs(bucket_name, prefix=result_prefix + f"{split}_eval/"):
         blob_name = str(blob).split("/")[-1]
         if "_predictions" in blob_name and eval_data_type in blob_name and "_predictions_clean" not in blob_name:
-            check_point_done = int(blob_name.split("_predictions")[0].split("_")[-1])
+            check_point_done = int(blob_name.split(
+                "_predictions")[0].split("_")[-1])
             # check_point_done = int(blob_name.split("_")[0].split("_")[-1])
             if check_point_done in check_points:
                 done_check_points.append(check_point_done)
@@ -108,7 +110,8 @@ def validate_path(results_dir, pretrained_model=None, PRETRAINED_MODELS=None):
     """
     if PRETRAINED_MODELS != None:
         if not results_dir.startswith("gs://"):
-            raise ValueError(f"RESULTS_DIR ({results_dir}) must be a GCS path.")
+            raise ValueError(
+                f"RESULTS_DIR ({results_dir}) must be a GCS path.")
 
         if pretrained_model.startswith("gs://"):
             if not tf.io.gfile.exists(pretrained_model):
@@ -123,7 +126,8 @@ def validate_path(results_dir, pretrained_model=None, PRETRAINED_MODELS=None):
                     f' {", ".join(PRETRAINED_MODELS.keys())}.')
     else:
         if not results_dir.startswith("gs://"):
-            raise ValueError(f"RESULTS_DIR ({results_dir}) must be a GCS path.")
+            raise ValueError(
+                f"RESULTS_DIR ({results_dir}) must be a GCS path.")
         elif not tf.io.gfile.exists(results_dir):
             raise IOError(f"RESULTS_DIR ({results_dir}) doesn't exist.")
 
@@ -192,8 +196,7 @@ def get_result_path(
     Get a result path given arguments
     """
     result_path = results_dir + \
-                  "/" + pretrained_model + \
-                  "/" + mixture + \
-                  f"/lr-{learning_rate}_bs-{batch_size}"
+        "/" + pretrained_model + \
+        "/" + mixture + \
+        f"/lr-{learning_rate}_bs-{batch_size}"
     return result_path
-

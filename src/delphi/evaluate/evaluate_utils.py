@@ -1,17 +1,13 @@
+from text2class import *
+from google.cloud import storage
+import pandas as pd
+import numpy as np
 import sys
 sys.path.append("script/evaluate")
 
-import random
-import operator
-import numpy as np
-import pandas as pd
-from google.cloud import storage
-from text2class import *
 pd.options.display.max_rows = 500
 pd.options.display.max_columns = 1000
 pd.options.display.max_colwidth = 512
-
-from text2class import *
 
 
 ################# handle files #################
@@ -55,10 +51,13 @@ def get_gold_single_input_task_full(task_name, data_version, data_split):
     df_data = pd.read_csv(file_path, sep="\t")
 
     if "pattern" in df_data.columns:
-        df_data_gold_full = df_data[["noisy_input_sequence", "class_label", "text_label", "source", "input_type", "pattern"]]
+        df_data_gold_full = df_data[[
+            "noisy_input_sequence", "class_label", "text_label", "source", "input_type", "pattern"]]
     else:
-        df_data_gold_full = df_data[["noisy_input_sequence", "class_label", "text_label", "source", "input_type"]]
-    df_data_gold_full = df_data_gold_full.rename(columns={"noisy_input_sequence": "input_sequence"})
+        df_data_gold_full = df_data[[
+            "noisy_input_sequence", "class_label", "text_label", "source", "input_type"]]
+    df_data_gold_full = df_data_gold_full.rename(
+        columns={"noisy_input_sequence": "input_sequence"})
 
     return df_data_gold_full
 
@@ -67,9 +66,11 @@ def get_gold_moral_comparison_full(data_version, data_split, is_noisy=True):
     file_path = f"data/{data_version}_full/{data_version}_sbic_joint/moral_comparison/{data_split}.moral_comparison.tsv"
     df_data = pd.read_csv(file_path, sep="\t")
     if is_noisy:
-        df_data["inputs"] = df_data["noisy_inputs"].str.replace("[moral_pair]: ", "", regex=False)
+        df_data["inputs"] = df_data["noisy_inputs"].str.replace(
+            "[moral_pair]: ", "", regex=False)
     else:
-        df_data["inputs"] = df_data["inputs"].str.replace("[moral_pair]: ", "", regex=False)
+        df_data["inputs"] = df_data["inputs"].str.replace(
+            "[moral_pair]: ", "", regex=False)
     return df_data
 
 
@@ -77,7 +78,8 @@ def get_gold_single_input_task_full_wild_v9(task_name, data_version, data_split,
     file_path = f"data/{data_version}_full/{data_version}_sbic_joint/{task_name}/{data_split}.{task_name}.tsv"
     df_data = pd.read_csv(file_path, sep="\t")
     df_data_gold_full = df_data[["input", "class_label", "text_label"]]
-    df_data_gold_full = df_data_gold_full.rename(columns={"input": "input_sequence"})
+    df_data_gold_full = df_data_gold_full.rename(
+        columns={"input": "input_sequence"})
     return df_data_gold_full
 
 
@@ -89,8 +91,8 @@ def main_moral_acceptability(client, bucket, bucket_name, base_path, check_point
     if is_include_class or is_include_text:
         task_name = "moral_acceptability"
         print("~" * 30, task_name)
-        df_moral_acceptability_full = get_gold_single_input_task_full(task_name, data_version, data_split)
-
+        df_moral_acceptability_full = get_gold_single_input_task_full(
+            task_name, data_version, data_split)
 
     if is_include_class:
         inputs, targets, preds = evaluate_single_input_task_class_task(bucket,
@@ -117,22 +119,21 @@ def main_moral_acceptability(client, bucket, bucket_name, base_path, check_point
                                               get_gold_single_input_task_text,
                                               get_pred_single_input_task_text)
 
-
-
         df_moral_acceptability_full = merge_moral_acceptability_text_results(df_moral_acceptability_full, inputs,
                                                                              targets, preds, targets_class, preds_class)
 
-
     if is_include_class or is_include_text:
-        save_result_file(df_moral_acceptability_full, client, bucket, base_path, check_point, task_name, data_split)
+        save_result_file(df_moral_acceptability_full, client,
+                         bucket, base_path, check_point, task_name, data_split)
 
 
 def main_wild_v9(client, bucket, bucket_name, base_path, check_point, data_version, data_split,
-                             get_gold_single_input_task_class, get_pred_single_input_task_class,
-                             get_gold_single_input_task_text, get_pred_single_input_task_text, task_name):
+                 get_gold_single_input_task_class, get_pred_single_input_task_class,
+                 get_gold_single_input_task_text, get_pred_single_input_task_text, task_name):
     # if is_include_class or is_include_text:
     print("~" * 30, task_name)
-    df_full = get_gold_single_input_task_full_wild_v9(task_name, data_version, data_split)
+    df_full = get_gold_single_input_task_full_wild_v9(
+        task_name, data_version, data_split)
 
     inputs, targets, preds = evaluate_single_input_task_class_task(bucket,
                                                                    bucket_name,
@@ -143,7 +144,8 @@ def main_wild_v9(client, bucket, bucket_name, base_path, check_point, data_versi
                                                                    data_split,
                                                                    get_gold_single_input_task_class,
                                                                    get_pred_single_input_task_class)
-    df_full = merge_single_input_task_class_results_wild_v9(df_full, inputs, targets, preds, task_name)
+    df_full = merge_single_input_task_class_results_wild_v9(
+        df_full, inputs, targets, preds, task_name)
 
     inputs, targets, targets_class, preds, preds_class = \
         evaluate_wild_v9_text(bucket,
@@ -154,14 +156,11 @@ def main_wild_v9(client, bucket, bucket_name, base_path, check_point, data_versi
                               data_split,
                               get_gold_single_input_task_text,
                               get_pred_single_input_task_text, task_name)
-#     # print(len(inputs))
-#     # print(len(targets))
-#     # print(len(targets_class))
-#     # print(len(preds))
-#     # print(len(preds_class))
 
-    df_full = merge_wild_v9_text_results(df_full, inputs, targets, preds, targets_class, preds_class)
-    save_result_file(df_full, client, bucket, base_path, check_point, task_name, data_split)
+    df_full = merge_wild_v9_text_results(
+        df_full, inputs, targets, preds, targets_class, preds_class)
+    save_result_file(df_full, client, bucket, base_path,
+                     check_point, task_name, data_split)
 
 
 def main_moral_agreement(client, bucket, bucket_name, base_path, check_point, data_version, data_split,
@@ -171,7 +170,8 @@ def main_moral_agreement(client, bucket, bucket_name, base_path, check_point, da
     if is_include_class or is_include_text:
         task_name = "moral_agreement"
         print("~" * 30, task_name)
-        df_moral_agreement_full = get_gold_single_input_task_full(task_name, data_version, data_split)
+        df_moral_agreement_full = get_gold_single_input_task_full(
+            task_name, data_version, data_split)
 
     if is_include_class:
         inputs, targets, preds = evaluate_single_input_task_class_task(bucket,
@@ -184,26 +184,29 @@ def main_moral_agreement(client, bucket, bucket_name, base_path, check_point, da
                                                                        get_gold_single_input_task_class,
                                                                        get_pred_single_input_task_class)
         df_moral_agreement_full = merge_single_input_task_class_results(df_moral_agreement_full, inputs, targets,
-                                                                    preds, task_name)
+                                                                        preds, task_name)
     if is_include_text:
         inputs, targets, preds = evaluate_moral_agreement_text(bucket,
-                                                                bucket_name,
-                                                                base_path,
-                                                                check_point,
-                                                                data_version,
-                                                                data_split,
-                                                                get_gold_single_input_task_text,
-                                                                get_pred_single_input_task_text)
-        df_moral_agreement_full = merge_moral_agreement_text_results(df_moral_agreement_full, inputs, targets, preds)
+                                                               bucket_name,
+                                                               base_path,
+                                                               check_point,
+                                                               data_version,
+                                                               data_split,
+                                                               get_gold_single_input_task_text,
+                                                               get_pred_single_input_task_text)
+        df_moral_agreement_full = merge_moral_agreement_text_results(
+            df_moral_agreement_full, inputs, targets, preds)
 
     if is_include_class or is_include_text:
-        save_result_file(df_moral_agreement_full, client, bucket, base_path, check_point, task_name, data_split)
+        save_result_file(df_moral_agreement_full, client, bucket,
+                         base_path, check_point, task_name, data_split)
 
 
 def main_moral_comparison(client, bucket, bucket_name, base_path, check_point, data_version, data_split,
                           get_gold_moral_comparison_class, get_pred_moral_comparison_class):
     print("~" * 30, "moral_comparison")
-    df_moral_comparison_full = get_gold_moral_comparison_full(data_version, data_split)
+    df_moral_comparison_full = get_gold_moral_comparison_full(
+        data_version, data_split)
     inputs, targets, preds = evaluate_moral_comparison_class(bucket,
                                                              bucket_name,
                                                              base_path,
@@ -214,13 +217,15 @@ def main_moral_comparison(client, bucket, bucket_name, base_path, check_point, d
                                                              get_pred_moral_comparison_class)
     df_moral_comparison_full = merge_moral_comparison_class_results(df_moral_comparison_full, inputs,
                                                                     targets, preds)
-    save_result_file(df_moral_comparison_full, client, bucket, base_path, check_point, "moral_comparison", data_split)
+    save_result_file(df_moral_comparison_full, client, bucket,
+                     base_path, check_point, "moral_comparison", data_split)
 
 
 ################# handle result files #################
 def save_result_file(df_to_save, client, bucket, base_path, check_point, task_name, data_split):
     result_base_path = base_path.replace("model", "results")
-    result_base_path = result_base_path.replace(f"{data_split}_eval", task_name) + f"{data_split}/"
+    result_base_path = result_base_path.replace(
+        f"{data_split}_eval", task_name) + f"{data_split}/"
     create_folder(client, bucket, result_base_path)
     df_to_save.to_csv("temp_result_file.csv", index=False)
     result_path = result_base_path + f"{task_name}_{check_point}.csv"
@@ -233,9 +238,6 @@ def create_folder(client, bucket, destination_folder_name):
     if not storage.Blob(bucket=bucket, name=destination_folder_name).exists(client):
         blob = bucket.blob(destination_folder_name)
         blob.upload_from_string('')
-    #     print('Created: {}'.format(destination_folder_name))
-    # else:
-    #     print('Exists: {}'.format(destination_folder_name))
 
 
 ################# merge results #################
@@ -247,9 +249,10 @@ def merge_single_input_task_class_results(df_full, inputs, targets, preds, task_
 
     df_joined = pd.merge(left=df_full, right=df_results,
                          left_on='input_sequence', right_on='inputs', how='left')
-    df_joined = df_joined.drop_duplicates(subset=['input_sequence'] + added_columns, keep="first")
-    # df_joined[f"{task_name}_class_targets"] = df_joined["class_label"]
-    df_joined = df_joined[df_joined[f"{task_name}_class_targets"] == df_joined["class_label"]]
+    df_joined = df_joined.drop_duplicates(
+        subset=['input_sequence'] + added_columns, keep="first")
+    df_joined = df_joined[df_joined[f"{task_name}_class_targets"]
+                          == df_joined["class_label"]]
 
     if "inputs_x" in df_joined.columns:
         df_joined = df_joined.drop(["inputs_x"], axis=1)
@@ -267,8 +270,8 @@ def merge_single_input_task_class_results_wild_v9(df_full, inputs, targets, pred
     df_joined = pd.merge(left=df_full, right=df_results,
                          left_on='input_sequence', right_on='inputs', how='left')
     df_joined[f"{task_name}_class_targets"] = df_joined["class_label"]
-    df_joined = df_joined.drop_duplicates(subset=["input_sequence", "class_label"], keep="first")
-    # df_joined = df_joined[df_joined[f"{task_name}_class_targets"] == df_joined["class_label"]]
+    df_joined = df_joined.drop_duplicates(
+        subset=["input_sequence", "class_label"], keep="first")
 
     if "inputs_x" in df_joined.columns:
         df_joined = df_joined.drop(["inputs_x"], axis=1)
@@ -280,34 +283,37 @@ def merge_single_input_task_class_results_wild_v9(df_full, inputs, targets, pred
 
 
 def merge_moral_acceptability_text_results(df_full, inputs, targets, preds, targets_class, preds_class):
-    added_columns =[f"moral_acceptability_text_targets",
-                    f"moral_acceptability_text_preds",
-                    f"moral_acceptability_text_2_class_targets",
-                    f"moral_acceptability_text_2_class_preds"]
+    added_columns = [f"moral_acceptability_text_targets",
+                     f"moral_acceptability_text_preds",
+                     f"moral_acceptability_text_2_class_targets",
+                     f"moral_acceptability_text_2_class_preds"]
     df_results = pd.DataFrame(list(zip(*[inputs, targets, preds, targets_class, preds_class])),
                               columns=["inputs"] + added_columns)
     df_joined = pd.merge(left=df_full, right=df_results,
                          left_on='input_sequence', right_on='inputs', how='left')
-    # df_joined["moral_acceptability_text_targets"] = df_joined["text_label"]
-    df_joined = df_joined[df_joined["moral_acceptability_text_targets"] == df_joined["text_label"]]
+    df_joined = df_joined[df_joined["moral_acceptability_text_targets"]
+                          == df_joined["text_label"]]
 
-    df_joined = df_joined.drop_duplicates(subset=['input_sequence'] + added_columns, keep="first")
+    df_joined = df_joined.drop_duplicates(
+        subset=['input_sequence'] + added_columns, keep="first")
     df_joined = df_joined.drop(["inputs", "class_label", "text_label"], axis=1)
     return df_joined
 
 
 def merge_wild_v9_text_results(df_full, inputs, targets, preds, targets_class, preds_class):
-    added_columns =[f"wild_v9_text_targets",
-                    f"wild_v9_text_preds",
-                    f"wild_v9_text_2_class_targets",
-                    f"wild_v9_text_2_class_preds"]
+    added_columns = [f"wild_v9_text_targets",
+                     f"wild_v9_text_preds",
+                     f"wild_v9_text_2_class_targets",
+                     f"wild_v9_text_2_class_preds"]
     df_results = pd.DataFrame(list(zip(*[inputs, targets, preds, targets_class, preds_class])),
                               columns=["inputs"] + added_columns)
     df_joined = pd.merge(left=df_full, right=df_results,
                          left_on='input_sequence', right_on='inputs', how='left')
-    df_joined = df_joined[df_joined["text_label"] == df_joined["wild_v9_text_targets"]]
+    df_joined = df_joined[df_joined["text_label"]
+                          == df_joined["wild_v9_text_targets"]]
 
-    df_joined = df_joined.drop_duplicates(subset=["input_sequence", "text_label"], keep="first")
+    df_joined = df_joined.drop_duplicates(
+        subset=["input_sequence", "text_label"], keep="first")
     df_joined = df_joined.drop(["inputs", "class_label", "text_label"], axis=1)
     return df_joined
 
@@ -319,11 +325,13 @@ def merge_moral_agreement_text_results(df_full, inputs, targets, preds):
                               columns=["inputs"] + added_columns)
     df_joined = pd.merge(left=df_full, right=df_results,
                          left_on='input_sequence', right_on='inputs', how='left')
-    # df_joined["moral_agreement_text_targets"] = df_joined["text_label"]
-    df_joined = df_joined[df_joined["moral_agreement_text_targets"] == df_joined["text_label"]]
+    df_joined = df_joined[df_joined["moral_agreement_text_targets"]
+                          == df_joined["text_label"]]
 
-    df_joined = df_joined.drop_duplicates(subset=['input_sequence'] + added_columns, keep="first")
-    df_joined = df_joined.drop(["inputs", "source", "text_label", "class_label"], axis=1)
+    df_joined = df_joined.drop_duplicates(
+        subset=['input_sequence'] + added_columns, keep="first")
+    df_joined = df_joined.drop(
+        ["inputs", "source", "text_label", "class_label"], axis=1)
     return df_joined
 
 
@@ -334,10 +342,11 @@ def merge_moral_comparison_class_results(df_full, inputs, targets, preds):
                               columns=["inputs"] + added_columns)
     df_joined = pd.merge(left=df_full, right=df_results,
                          left_on='inputs', right_on='inputs', how='left')
-    # df_joined["moral_comparison_class_targets"] = df_joined["targets"]
-    df_joined = df_joined[df_joined["moral_comparison_class_targets"] == df_joined["targets"]]
+    df_joined = df_joined[df_joined["moral_comparison_class_targets"]
+                          == df_joined["targets"]]
 
-    df_joined = df_joined.drop_duplicates(subset=['inputs'] + added_columns, keep="first")
+    df_joined = df_joined.drop_duplicates(
+        subset=['inputs'] + added_columns, keep="first")
     df_joined = df_joined.drop(["targets", "inputs"], axis=1)
     return df_joined
 
@@ -345,46 +354,60 @@ def merge_moral_comparison_class_results(df_full, inputs, targets, preds):
 ################# get inputs and preds #################
 def evaluate_single_input_task_class_task(bucket, bucket_name, base_path, check_point, data_version, task_name,
                                           data_split, get_gold, get_pred):
-    inputs, targets = get_gold(bucket, bucket_name, base_path, data_version, task_name, data_split)
+    inputs, targets = get_gold(
+        bucket, bucket_name, base_path, data_version, task_name, data_split)
     preds = get_pred(bucket, base_path, task_name, check_point)
     if len(inputs) != len(preds):
-        print(f"ERROR: inputs {len(inputs)} and preds {len(preds)} have different length")
+        print(
+            f"ERROR: inputs {len(inputs)} and preds {len(preds)} have different length")
     return inputs, targets, preds
 
 
 def evaluate_moral_acceptability_text(bucket, bucket_name, base_path, check_point, data_version, data_split,
                                       get_gold, get_pred):
-    inputs, targets = get_gold(bucket, bucket_name, base_path, data_version, "moral_acceptability", data_split)
+    inputs, targets = get_gold(
+        bucket, bucket_name, base_path, data_version, "moral_acceptability", data_split)
     preds = get_pred(bucket, base_path, "moral_acceptability", check_point)
-    targets_class, preds_class = convert_moral_acceptability_text_to_class(targets, preds)
+    targets_class, preds_class = convert_moral_acceptability_text_to_class(
+        targets, preds)
     if len(inputs) != len(preds):
-        print(f"ERROR: inputs {len(inputs)} and preds {len(preds)} have different length")
+        print(
+            f"ERROR: inputs {len(inputs)} and preds {len(preds)} have different length")
     return inputs, targets, targets_class, preds, preds_class
 
 
 def evaluate_moral_agreement_text(bucket, bucket_name, base_path, check_point, data_version, data_split,
                                   get_gold, get_pred):
-    inputs, targets = get_gold(bucket, bucket_name, base_path, data_version, "moral_agreement", data_split)
+    inputs, targets = get_gold(
+        bucket, bucket_name, base_path, data_version, "moral_agreement", data_split)
     preds = get_pred(bucket, base_path, "moral_agreement", check_point)
     if len(inputs) != len(preds):
-        print(f"ERROR: inputs {len(inputs)} and preds {len(preds)} have different length")
+        print(
+            f"ERROR: inputs {len(inputs)} and preds {len(preds)} have different length")
     return inputs, targets, preds
 
+
 def evaluate_wild_v9_text(bucket, bucket_name, base_path, check_point, data_version, data_split,
-                                      get_gold, get_pred, task_name):
-    inputs, targets = get_gold(bucket, bucket_name, base_path, data_version, task_name, data_split)
+                          get_gold, get_pred, task_name):
+    inputs, targets = get_gold(
+        bucket, bucket_name, base_path, data_version, task_name, data_split)
     preds = get_pred(bucket, base_path, task_name, check_point)
-    targets_class, preds_class = convert_moral_acceptability_text_to_class_wild_v9(targets, preds)
+    targets_class, preds_class = convert_moral_acceptability_text_to_class_wild_v9(
+        targets, preds)
     if len(inputs) != len(preds):
-        print(f"ERROR: inputs {len(inputs)} and preds {len(preds)} have different length")
+        print(
+            f"ERROR: inputs {len(inputs)} and preds {len(preds)} have different length")
     return inputs, targets, targets_class, preds, preds_class
 
+
 def evaluate_moral_comparison_class(bucket, bucket_name, base_path, check_point, data_version, data_split,
-                                  get_gold, get_pred):
-    inputs, targets = get_gold(bucket, bucket_name, base_path, data_version, data_split)
+                                    get_gold, get_pred):
+    inputs, targets = get_gold(
+        bucket, bucket_name, base_path, data_version, data_split)
     preds = get_pred(bucket, base_path, check_point)
     if len(inputs) != len(preds):
-        print(f"ERROR: inputs {len(inputs)} and preds {len(preds)} have different length")
+        print(
+            f"ERROR: inputs {len(inputs)} and preds {len(preds)} have different length")
     return inputs, targets, preds
 
 
@@ -393,7 +416,7 @@ def convert_moral_acceptability_text_to_class_wild_v9(targets, preds):
     preds_classes = []
     target_classes = []
     covered_count = 0
-    label_map_count ={}
+    label_map_count = {}
     for i in range(len(targets)):
         target = normalize_label(targets[i])
         pred = normalize_label(preds[i])
@@ -410,8 +433,6 @@ def convert_moral_acceptability_text_to_class_wild_v9(targets, preds):
                 yesno_pred = pred.split(", ")[0]
                 text_pred = normalize_label(pred.split("yes, ")[1])
 
-            # print(yesno_target, yesno_pred, text_target, text_pred)
-
             if target == pred:
                 if yesno_target == "yes":
                     target_classes.append(1)
@@ -420,7 +441,6 @@ def convert_moral_acceptability_text_to_class_wild_v9(targets, preds):
                     target_classes.append(-1)
                     preds_classes.append(-1)
                 covered_count += 1
-                # print(yesno_target, yesno_pred, text_target, text_pred)
 
             elif text_target in text2class and text_pred in text2class:
                 text_target_class = text2class[text_target]
@@ -433,11 +453,9 @@ def convert_moral_acceptability_text_to_class_wild_v9(targets, preds):
                     else:
                         target_classes.append(-1)
                         preds_classes.append(-1)
-                    # print(yesno_target, yesno_pred, text_target, text_pred)
                 else:
                     target_classes.append(1)
                     preds_classes.append(-1)
-                    # print(int(yesno_target == "yes"), int(yesno_pred != "yes"))
                 covered_count += 1
 
             else:
@@ -460,25 +478,21 @@ def convert_moral_acceptability_text_to_class_wild_v9(targets, preds):
         if "yes, " in target:
             text_target = normalize_label(target.split("yes, ")[1])
             if text_target in text2class and text2class[text_target] == 1:
-                # print(text_target, "|", target)
                 target = text_target
 
         elif "no, " in target:
             text_target = normalize_label(target.split("no, ")[1])
             if text_target in text2class and text2class[text_target] == -1:
-                # print(text_target, "|", target)
                 target = text_target
 
         elif "yes, " in pred:
             text_pred = normalize_label(pred.split("yes, ")[1])
             if text_pred in text2class and text2class[text_pred] == 1:
-                # print(text_pred, "|", pred)
                 pred = text_pred
 
         elif "no, " in pred:
             text_pred = normalize_label(pred.split("no, ")[1])
             if text_pred in text2class and text2class[text_pred] == -1:
-                # print(text_pred, "|", pred)
                 pred = text_pred
 
         if target not in text2class:
@@ -503,15 +517,12 @@ def convert_moral_acceptability_text_to_class_wild_v9(targets, preds):
         else:
             target_classes.append(99)
             preds_classes.append(99)
-            # print(target, pred)
 
-    label_map_count = sorted(label_map_count.items(), key=lambda x: x[1], reverse=True)
-    #
-    # for k, v in label_map_count:
-    #     print(v, k)
+    label_map_count = sorted(label_map_count.items(),
+                             key=lambda x: x[1], reverse=True)
 
-    # print(1 - (preds_classes.count(99) / len(preds_classes)))
-    print(covered_count, len(preds_classes), "label coverage rate: %0.3f" % (covered_count / len(preds_classes)))
+    print(covered_count, len(preds_classes), "label coverage rate: %0.3f" %
+          (covered_count / len(preds_classes)))
 
     return target_classes, preds_classes
 
@@ -520,7 +531,7 @@ def convert_moral_acceptability_text_to_class(targets, preds):
     preds_classes = []
     target_classes = []
     covered_count = 0
-    label_map_count ={}
+    label_map_count = {}
     for i in range(len(targets)):
         target = normalize_label(targets[i])
         pred = normalize_label(preds[i])
@@ -548,13 +559,10 @@ def convert_moral_acceptability_text_to_class(targets, preds):
             target_classes.append(99)
             preds_classes.append(99)
 
-    label_map_count = sorted(label_map_count.items(), key=lambda x: x[1], reverse=True)
-    # for k, v in label_map_count:
-    #     if " " not in k:
-            # print(v, k)
-            # print(f"\"{k}\": ,")
-
-    print("label coverage rate: %0.3f" % (1 - (preds_classes.count(99) / len(preds_classes))))
+    label_map_count = sorted(label_map_count.items(),
+                             key=lambda x: x[1], reverse=True)
+    print("label coverage rate: %0.3f" %
+          (1 - (preds_classes.count(99) / len(preds_classes))))
 
     return target_classes, preds_classes
 
@@ -564,8 +572,10 @@ def get_moral_acceptability_text_exact_match_accuracy(targets, preds):
     targets_clean = [normalize_label(t) for t in targets]
     preds_clean = [normalize_label(p) for p in preds]
 
-    exact_match_accuracies = [int(targets_clean[i] == preds_clean[i]) for i in range(len(targets_clean))]
-    exact_match_accuracy = float(sum(exact_match_accuracies) / len(exact_match_accuracies))
+    exact_match_accuracies = [int(targets_clean[i] == preds_clean[i])
+                              for i in range(len(targets_clean))]
+    exact_match_accuracy = float(
+        sum(exact_match_accuracies) / len(exact_match_accuracies))
     return exact_match_accuracy
 
 
@@ -600,20 +610,17 @@ def get_moral_agreement_text_accuracy(targets, preds):
                 else:
                     polarity_align_accuracies.append(0)
         else:
-            # if targets_clean[i] != preds_clean[i]:
-            #     print(targets_clean[i], preds_clean[i])
             polarity_align_accuracies.append(1)
 
-    exact_match_accuracy = float(sum(exact_match_accuracies) / len(exact_match_accuracies))
-    polarity_align_accuracy = float(sum(polarity_align_accuracies) / len(polarity_align_accuracies))
+    exact_match_accuracy = float(
+        sum(exact_match_accuracies) / len(exact_match_accuracies))
+    polarity_align_accuracy = float(
+        sum(polarity_align_accuracies) / len(polarity_align_accuracies))
 
-    # print("label coverage rate: %0.3f" % (len(polarity_align_accuracies) / len(targets)))
     return exact_match_accuracy, polarity_align_accuracy
 
 
 def get_accuracy(targets, preds, accuracy_type="exact"):
-    # print(targets)
-    # print(len(targets), len(preds))
     accuracies = []
     for i in range(len(targets)):
         t_c = targets[i]
@@ -624,14 +631,14 @@ def get_accuracy(targets, preds, accuracy_type="exact"):
             elif accuracy_type == "non conflict":
                 accuracies.append(int(t_c * p_c >= 0))
             else:
-                accuracies.append(not int((t_c == -1 or p_c == -1) and (t_c * p_c != 1)))
+                accuracies.append(
+                    not int((t_c == -1 or p_c == -1) and (t_c * p_c != 1)))
 
-    # print("percent covered:", len(accuracies), len(accuracies) / len(targets))
     return sum(accuracies) / len(accuracies)
 
 
 def most_frequent(List):
-    return max(set(List), key = List.count)
+    return max(set(List), key=List.count)
 
 
 def get_majority_votes(d):

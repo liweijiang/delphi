@@ -219,12 +219,7 @@ def compile_v5_data():
 
     # df_data["source"] = df_data["source"]
 
-    # print(df_data["source"].value_counts())
-    # print(df_data["split"].value_counts())
     df_data.to_csv("/Users/liweijiang/Desktop/delphi_algo/data/demo/mturk/split/event_only_v5.csv", index=False, sep="\t")
-    # print(len(train_event))
-    # print(len(dev_event))
-    # print(len(test_event))
 
 
 if __name__ == "__main__":

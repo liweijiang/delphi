@@ -2,6 +2,10 @@
 
 """Fine-tune T5 based models."""
 
+import mixtures
+import tasks
+import warnings
+import util
 import t5
 import sys
 import seqio
@@ -14,14 +18,11 @@ print("t5", t5.__version__)
 print("tf", tf.__version__)
 print("seqio", seqio.__version__)
 
-import util
-import warnings
-import tasks, mixtures
 # We must import tasks and mixtures here so that the tasks and mixtures are registered and available for training.
 
 logger = logging.getLogger(__name__)
 
-v=tf.compat.v1.logging.FATAL
+v = tf.compat.v1.logging.FATAL
 tf.compat.v1.logging.set_verbosity(v)
 tf.disable_v2_behavior()
 
@@ -43,11 +44,14 @@ PRETRAINED_MODELS = {
     "v9-delphi-large": ("gs://ai2-tpu-europe-west4/projects/liweij/mosaic-commonsense-morality/model/v9/large/sbic_commonsense_morality_joint_all_proportional/lr-0.0001_bs-8/", 1643100),
 }
 
+
 @click.command()
 @click.argument("mixture", type=str)
 @click.argument("results_dir", type=str)
-@click.argument("tpu-name", type=str) # The name of the TPU. Defaults to the TPU_NAME environment variable.
-@click.argument("tpu-topology", type=str) # The topology of the TPU. Defaults to the TPU_TOPOLOGY environment variable.
+# The name of the TPU. Defaults to the TPU_NAME environment variable.
+@click.argument("tpu-name", type=str)
+# The topology of the TPU. Defaults to the TPU_TOPOLOGY environment variable.
+@click.argument("tpu-topology", type=str)
 @click.argument("pretrained-model", type=str)
 @click.option(
     "--split",
@@ -91,7 +95,6 @@ PRETRAINED_MODELS = {
     default=False,
     help="Whether to continue training from an existing checkpoint.",
 )
-
 def fine_tune(
     mixture: str,
     results_dir: str,
@@ -123,7 +126,8 @@ def fine_tune(
     pretrained_checkpoint_step = -1
 
     # Get result path given arguments
-    result_path = util.get_result_path(results_dir, pretrained_model, mixture, learning_rate, batch_size)
+    result_path = util.get_result_path(
+        results_dir, pretrained_model, mixture, learning_rate, batch_size)
 
     # Validate path
     util.validate_path(results_dir, pretrained_model, PRETRAINED_MODELS)
@@ -138,9 +142,9 @@ def fine_tune(
 
     # Print arguments
     util.print_arguments(result_path, results_dir, mixture, split, pretrained_model,
-                    pretrained_checkpoint_step, n_steps, batch_size, model_parallelism,
-                    save_checkpoints_steps, n_checkpoints_to_keep, learning_rate,
-                    tpu_name, tpu_topology, tasks, continue_finetune)
+                         pretrained_checkpoint_step, n_steps, batch_size, model_parallelism,
+                         save_checkpoints_steps, n_checkpoints_to_keep, learning_rate,
+                         tpu_name, tpu_topology, tasks, continue_finetune)
 
     # Run fine-tuning
     model = t5.models.MtfModel(

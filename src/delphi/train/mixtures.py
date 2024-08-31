@@ -33,7 +33,6 @@ import util
 # util.print_mixture_examples("commonsense_morality_separate_all_proportional", num_ex=1)
 
 
-
 # seqio.MixtureRegistry.add(
 #     "sbic_commonsense_morality_joint_comparison_double_all_proportional",
 #     ["sbic_moral_acceptability",
@@ -102,7 +101,7 @@ seqio.MixtureRegistry.add(
     ["sbic_moral_acceptability",
      "sbic_moral_agreement",
      "sbic_moral_comparison"],
-     default_rate=rates.MIXING_RATES["proportional"]
+    default_rate=rates.MIXING_RATES["proportional"]
 )
 util.print_mixture_examples("sbic_commonsense_morality_joint_all_proportional")
 
@@ -197,16 +196,17 @@ util.print_mixture_examples("sbic_commonsense_morality_joint_all_proportional")
 
 
 ################# commonsense norm bank + ablations ##################
-proportions = [0.01] # , 1, 10, 30, 60, 90, "base"
+proportions = [0.01]  # , 1, 10, 30, 60, 90, "base"
 for proportion in proportions:
     seqio.MixtureRegistry.add(
         f"sbic_commonsense_morality_joint_all_proportional_new_{proportion}",
         [f"sbic_moral_acceptability_{proportion}",
          f"sbic_moral_agreement_{proportion}",
          f"sbic_moral_comparison_{proportion}"],
-         default_rate=rates.MIXING_RATES["proportional"]
+        default_rate=rates.MIXING_RATES["proportional"]
     )
-    util.print_mixture_examples(f"sbic_commonsense_morality_joint_all_proportional_new_{proportion}")
+    util.print_mixture_examples(
+        f"sbic_commonsense_morality_joint_all_proportional_new_{proportion}")
 
 
 ################## commonsense norm bank + wild ablations ##################
@@ -244,32 +244,32 @@ for proportion in proportions:
 
 seqio.MixtureRegistry.add(
     "all",
-    [   f"wild_train_100",
+    [f"wild_train_100",
         "sbic_moral_acceptability",
         "sbic_moral_agreement",
         "sbic_moral_comparison",
         "race_test",
         "gender_test"],
-     default_rate=rates.MIXING_RATES["proportional"]
+    default_rate=rates.MIXING_RATES["proportional"]
 )
 util.print_mixture_examples(f"all")
 
 
 seqio.MixtureRegistry.add(
     "hard_all",
-    [   f"wild_train_100",
+    [f"wild_train_100",
         "race_test",
         "gender_test"],
-     default_rate=rates.MIXING_RATES["proportional"]
+    default_rate=rates.MIXING_RATES["proportional"]
 )
 util.print_mixture_examples(f"hard_all")
 
 
 seqio.MixtureRegistry.add(
     "race_gender",
-    [   "race_test",
+    ["race_test",
         "gender_test"],
-     default_rate=rates.MIXING_RATES["proportional"]
+    default_rate=rates.MIXING_RATES["proportional"]
 )
 
 dynahate = False
@@ -312,20 +312,20 @@ if dynahate:
 
     seqio.MixtureRegistry.add(
         "dynahate_all_st",
-        [   f"dynahate_round_1_st",
+        [f"dynahate_round_1_st",
             f"dynahate_round_2_st",
             f"dynahate_round_3_st",
             f"dynahate_round_4_st",],
-         default_rate=rates.MIXING_RATES["proportional"]
+        default_rate=rates.MIXING_RATES["proportional"]
     )
 
     seqio.MixtureRegistry.add(
         "dynahate_all_st_100_shot",
-        [   f"dynahate_round_1_st_100_shot",
+        [f"dynahate_round_1_st_100_shot",
             f"dynahate_round_2_st_100_shot",
             f"dynahate_round_3_st_100_shot",
             f"dynahate_round_4_st_100_shot",],
-         default_rate=rates.MIXING_RATES["proportional"]
+        default_rate=rates.MIXING_RATES["proportional"]
     )
 
     # seqio.MixtureRegistry.add(

@@ -1,6 +1,7 @@
 """
 Data tasks
 """
+import util
 import os
 import t5
 import tensorflow.compat.v1 as tf
@@ -12,8 +13,6 @@ print("python", sys.version)
 print("t5", t5.__version__)
 print("tf", tf.__version__)
 print("seqio", seqio.__version__)
-
-import util
 
 
 # DEFAULT_OUTPUT_FEATURES = {
@@ -174,10 +173,6 @@ import util
 #         )
 #
 #         util.print_task_examples(task_name)
-
-
-
-
 
 
 DEFAULT_OUTPUT_FEATURES = {
@@ -476,14 +471,15 @@ seqio.TaskRegistry.add(
     source=seqio.TextLineDataSource(
         split_to_filepattern=sbic_moral_acceptability_tsv_path,
         # Not required, but helps for mixing and auto-caching.
-        num_input_examples=util.get_num_elements_split(sbic_moral_acceptability_tsv_path)
+        num_input_examples=util.get_num_elements_split(
+            sbic_moral_acceptability_tsv_path)
     ),
     # Supply a list of functions that preprocess the input tf.data.Dataset.
     preprocessors=[
-      functools.partial(
-          t5.data.preprocessors.parse_tsv,
-          field_names=["inputs", "targets"]),
-      seqio.preprocessors.tokenize_and_append_eos,
+        functools.partial(
+            t5.data.preprocessors.parse_tsv,
+            field_names=["inputs", "targets"]),
+        seqio.preprocessors.tokenize_and_append_eos,
     ],
     # Lowercase targets before computing metrics.
     postprocess_fn=t5.data.postprocessors.lower_text,
@@ -496,13 +492,14 @@ seqio.TaskRegistry.add(
     "sbic_moral_agreement",
     source=seqio.TextLineDataSource(
         split_to_filepattern=sbic_moral_agreement_tsv_path,
-        num_input_examples=util.get_num_elements_split(sbic_moral_agreement_tsv_path)
+        num_input_examples=util.get_num_elements_split(
+            sbic_moral_agreement_tsv_path)
     ),
     preprocessors=[
-      functools.partial(
-          t5.data.preprocessors.parse_tsv,
-          field_names=["inputs", "targets"]),
-      seqio.preprocessors.tokenize_and_append_eos,
+        functools.partial(
+            t5.data.preprocessors.parse_tsv,
+            field_names=["inputs", "targets"]),
+        seqio.preprocessors.tokenize_and_append_eos,
     ],
     postprocess_fn=t5.data.postprocessors.lower_text,
     metric_fns=[t5.evaluation.metrics.accuracy],
@@ -513,13 +510,14 @@ seqio.TaskRegistry.add(
     "sbic_moral_comparison",
     source=seqio.TextLineDataSource(
         split_to_filepattern=sbic_moral_comparison_tsv_path,
-        num_input_examples=util.get_num_elements_split(sbic_moral_comparison_tsv_path)
+        num_input_examples=util.get_num_elements_split(
+            sbic_moral_comparison_tsv_path)
     ),
     preprocessors=[
-      functools.partial(
-          t5.data.preprocessors.parse_tsv,
-          field_names=["inputs", "targets"]),
-      seqio.preprocessors.tokenize_and_append_eos,
+        functools.partial(
+            t5.data.preprocessors.parse_tsv,
+            field_names=["inputs", "targets"]),
+        seqio.preprocessors.tokenize_and_append_eos,
     ],
     postprocess_fn=t5.data.postprocessors.lower_text,
     metric_fns=[t5.evaluation.metrics.accuracy],
@@ -652,10 +650,6 @@ util.print_task_examples("sbic_moral_comparison")
 # util.print_task_examples("sbic_moral_comparison_class")
 
 
-
-
-
-
 #     seqio.TaskRegistry.add(
 #         f"sbic_moral_acceptability_{proportion}",
 #         # Specify the task source.
@@ -712,8 +706,6 @@ util.print_task_examples("sbic_moral_comparison")
 #         output_features=DEFAULT_OUTPUT_FEATURES,
 #     )
 #
-
-
 
 
 # ################## ethics values raw (for fine-tuning) ##################
@@ -1154,7 +1146,7 @@ util.print_task_examples("sbic_moral_comparison")
 
 
 ################## commonsense morality {data_version} sbic joint (10, 30, 60 percent) ##################
-proportions = [0.01] # , 1, 10, 30, 60, 90, "base"
+proportions = [0.01]  # , 1, 10, 30, 60, 90, "base"
 for proportion in proportions:
     if proportion == "base":
         MORALITY_JOINT_DATA_DIR = f"gs://ai2-tpu-europe-west4/projects/liweij/mosaic-commonsense-morality/data/{data_version}_ablation/compositionality/{proportion}/"
@@ -1188,7 +1180,8 @@ for proportion in proportions:
         source=seqio.TextLineDataSource(
             split_to_filepattern=sbic_moral_acceptability_tsv_path,
             # Not required, but helps for mixing and auto-caching.
-            num_input_examples=util.get_num_elements_split(sbic_moral_acceptability_tsv_path)
+            num_input_examples=util.get_num_elements_split(
+                sbic_moral_acceptability_tsv_path)
         ),
         # Supply a list of functions that preprocess the input tf.data.Dataset.
         preprocessors=[
@@ -1208,7 +1201,8 @@ for proportion in proportions:
         f"sbic_moral_agreement_{proportion}",
         source=seqio.TextLineDataSource(
             split_to_filepattern=sbic_moral_agreement_tsv_path,
-            num_input_examples=util.get_num_elements_split(sbic_moral_agreement_tsv_path)
+            num_input_examples=util.get_num_elements_split(
+                sbic_moral_agreement_tsv_path)
         ),
         preprocessors=[
             functools.partial(
@@ -1225,7 +1219,8 @@ for proportion in proportions:
         f"sbic_moral_comparison_{proportion}",
         source=seqio.TextLineDataSource(
             split_to_filepattern=sbic_moral_comparison_tsv_path,
-            num_input_examples=util.get_num_elements_split(sbic_moral_comparison_tsv_path)
+            num_input_examples=util.get_num_elements_split(
+                sbic_moral_comparison_tsv_path)
         ),
         preprocessors=[
             functools.partial(
@@ -1263,10 +1258,10 @@ seqio.TaskRegistry.add(
     ),
     # Supply a list of functions that preprocess the input tf.data.Dataset.
     preprocessors=[
-      functools.partial(
-          t5.data.preprocessors.parse_tsv,
-          field_names=["inputs", "targets"]),
-      seqio.preprocessors.tokenize_and_append_eos,
+        functools.partial(
+            t5.data.preprocessors.parse_tsv,
+            field_names=["inputs", "targets"]),
+        seqio.preprocessors.tokenize_and_append_eos,
     ],
     # Lowercase targets before computing metrics.
     postprocess_fn=t5.data.postprocessors.lower_text,
@@ -1292,10 +1287,10 @@ seqio.TaskRegistry.add(
     ),
     # Supply a list of functions that preprocess the input tf.data.Dataset.
     preprocessors=[
-      functools.partial(
-          t5.data.preprocessors.parse_tsv,
-          field_names=["inputs", "targets"]),
-      seqio.preprocessors.tokenize_and_append_eos,
+        functools.partial(
+            t5.data.preprocessors.parse_tsv,
+            field_names=["inputs", "targets"]),
+        seqio.preprocessors.tokenize_and_append_eos,
     ],
     # Lowercase targets before computing metrics.
     postprocess_fn=t5.data.postprocessors.lower_text,
@@ -1305,10 +1300,9 @@ seqio.TaskRegistry.add(
 )
 
 
-
 BASE_DATA_DIR = f"gs://ai2-tpu-europe-west4/projects/liweij/mosaic-commonsense-morality/data/{data_version}_wild/"
 #
-proportions = [100] # 10, 20, 40, 60, 80,
+proportions = [100]  # 10, 20, 40, 60, 80,
 tasks = ["", "woz"]
 for p in proportions:
     for t in tasks:
@@ -1327,14 +1321,14 @@ for p in proportions:
             }
             task_name = f"wild_train_{p}"
 
-
         seqio.TaskRegistry.add(
             task_name,
             # Specify the task source.
             source=seqio.TextLineDataSource(
                 split_to_filepattern=wild_train_tsv_path,
                 # Not required, but helps for mixing and auto-caching.
-                num_input_examples=util.get_num_elements_split(wild_train_tsv_path)
+                num_input_examples=util.get_num_elements_split(
+                    wild_train_tsv_path)
             ),
             # Supply a list of functions that preprocess the input tf.data.Dataset.
             preprocessors=[
@@ -1432,7 +1426,7 @@ for p in proportions:
 # ================================================== dynahate ==================================================
 dynahate = False
 if dynahate:
-    for round_id in [1, 2, 3, 4]: #
+    for round_id in [1, 2, 3, 4]:
         # BASE_DATA_DIR = f"gs://ai2-tpu-europe-west4/projects/liweij/mosaic-commonsense-morality/data/v9_downstream/dynahate/{round_id}/"
         #
         # dynahate_tsv_path = {
@@ -1494,13 +1488,13 @@ if dynahate:
         # )
 
         # BASE_DATA_DIR = f"gs://ai2-tpu-europe-west4/projects/liweij/mosaic-commonsense-morality/data/v9_downstream/dynahate/{round_id}_nat/"
-        # 
+        #
         # dynahate_tsv_path = {
         #     "test": os.path.join(BASE_DATA_DIR, "test.tsv"),
         #     "train": os.path.join(BASE_DATA_DIR, "train.tsv"),
         #     "validation": os.path.join(BASE_DATA_DIR, "dev.tsv")
         # }
-        # 
+        #
         # seqio.TaskRegistry.add(
         #     f"dynahate_round_{round_id}_nat",
         #     # Specify the task source.
@@ -1522,15 +1516,15 @@ if dynahate:
         #     metric_fns=[t5.evaluation.metrics.accuracy],
         #     output_features=DEFAULT_OUTPUT_FEATURES,
         # )
-        # 
-        # 
+        #
+        #
         # BASE_DATA_DIR = f"gs://ai2-tpu-europe-west4/projects/liweij/mosaic-commonsense-morality/data/v9_downstream/dynahate/100-shot/{round_id}_nat/"
         # dynahate_tsv_path = {
         #     "test": os.path.join(BASE_DATA_DIR, "test.tsv"),
         #     "train": os.path.join(BASE_DATA_DIR, "train.tsv"),
         #     "validation": os.path.join(BASE_DATA_DIR, "dev.tsv")
         # }
-        # 
+        #
         # seqio.TaskRegistry.add(
         #     f"dynahate_round_{round_id}_nat_100_shot",
         #     # Specify the task source.
@@ -1567,7 +1561,8 @@ if dynahate:
             source=seqio.TextLineDataSource(
                 split_to_filepattern=dynahate_tsv_path,
                 # Not required, but helps for mixing and auto-caching.
-                num_input_examples=util.get_num_elements_split(dynahate_tsv_path)
+                num_input_examples=util.get_num_elements_split(
+                    dynahate_tsv_path)
             ),
             # Supply a list of functions that preprocess the input tf.data.Dataset.
             preprocessors=[
@@ -1596,7 +1591,8 @@ if dynahate:
             source=seqio.TextLineDataSource(
                 split_to_filepattern=dynahate_tsv_path,
                 # Not required, but helps for mixing and auto-caching.
-                num_input_examples=util.get_num_elements_split(dynahate_tsv_path)
+                num_input_examples=util.get_num_elements_split(
+                    dynahate_tsv_path)
             ),
             # Supply a list of functions that preprocess the input tf.data.Dataset.
             preprocessors=[
@@ -1731,7 +1727,6 @@ if dynahate:
         # )
 
 
-
 ################## ethics values ##################
 ethics = False
 if ethics:
@@ -1754,10 +1749,10 @@ if ethics:
                 num_input_examples=util.get_num_elements_split(ethics_tsv_path)
             ),
             preprocessors=[
-              functools.partial(
-                  t5.data.preprocessors.parse_tsv,
-                  field_names=["inputs", "targets"]),
-              seqio.preprocessors.tokenize_and_append_eos,
+                functools.partial(
+                    t5.data.preprocessors.parse_tsv,
+                    field_names=["inputs", "targets"]),
+                seqio.preprocessors.tokenize_and_append_eos,
             ],
             postprocess_fn=t5.data.postprocessors.lower_text,
             metric_fns=[t5.evaluation.metrics.accuracy],
@@ -1806,10 +1801,10 @@ if latenthatred:
             num_input_examples=util.get_num_elements_split(tsv_path)
         ),
         preprocessors=[
-          functools.partial(
-              t5.data.preprocessors.parse_tsv,
-              field_names=["inputs", "targets"]),
-          seqio.preprocessors.tokenize_and_append_eos,
+            functools.partial(
+                t5.data.preprocessors.parse_tsv,
+                field_names=["inputs", "targets"]),
+            seqio.preprocessors.tokenize_and_append_eos,
         ],
         postprocess_fn=t5.data.postprocessors.lower_text,
         metric_fns=[t5.evaluation.metrics.accuracy],
@@ -1859,10 +1854,10 @@ if sciworld:
             num_input_examples=util.get_num_elements_split(tsv_path)
         ),
         preprocessors=[
-          functools.partial(
-              t5.data.preprocessors.parse_tsv,
-              field_names=["inputs", "targets"]),
-          seqio.preprocessors.tokenize_and_append_eos,
+            functools.partial(
+                t5.data.preprocessors.parse_tsv,
+                field_names=["inputs", "targets"]),
+            seqio.preprocessors.tokenize_and_append_eos,
         ],
         postprocess_fn=t5.data.postprocessors.lower_text,
         metric_fns=[t5.evaluation.metrics.accuracy],

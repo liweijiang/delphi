@@ -2,44 +2,48 @@ import sys
 sys.path.append("script/evaluate")
 from evaluate_utils import *
 
+
 def eval_accept(row_accuracies, df_results):
     class_targets = df_results["moral_acceptability_class_targets"].tolist()
     class_preds = df_results["moral_acceptability_class_preds"].tolist()
-    row_accuracies.append(get_accuracy(class_targets, class_preds, accuracy_type="exact"))
-    row_accuracies.append(get_accuracy(class_targets, class_preds, accuracy_type="binary"))
-    # print("accept class exact:", get_accuracy(class_targets, class_preds, accuracy_type="exact"))
-    # print("accept class binary:", get_accuracy(class_targets, class_preds, accuracy_type="binary"))
+    row_accuracies.append(get_accuracy(
+        class_targets, class_preds, accuracy_type="exact"))
+    row_accuracies.append(get_accuracy(
+        class_targets, class_preds, accuracy_type="binary"))
 
-    text_class_targets = df_results["moral_acceptability_text_2_class_targets"].tolist()
-    text_class_preds = df_results["moral_acceptability_text_2_class_preds"].tolist()
-    row_accuracies.append(get_accuracy(text_class_targets, text_class_preds, accuracy_type="binary"))
-    # print("accept text binary:", get_accuracy(text_class_targets, text_class_preds, accuracy_type="binary"))
+    text_class_targets = df_results["moral_acceptability_text_2_class_targets"].tolist(
+    )
+    text_class_preds = df_results["moral_acceptability_text_2_class_preds"].tolist(
+    )
+    row_accuracies.append(get_accuracy(
+        text_class_targets, text_class_preds, accuracy_type="binary"))
 
     text_targets = df_results["moral_acceptability_text_targets"].tolist()
     text_preds = df_results["moral_acceptability_text_preds"].tolist()
-    exact_match_accuracy = get_moral_acceptability_text_exact_match_accuracy(text_targets, text_preds)
-    # print("accept text exact:", exact_match_accuracy)
+    exact_match_accuracy = get_moral_acceptability_text_exact_match_accuracy(
+        text_targets, text_preds)
     return row_accuracies
 
 
 def eval_agree(row_accuracies, df_results):
     class_targets = df_results["moral_agreement_class_targets"].tolist()
     class_preds = df_results["moral_agreement_class_preds"].tolist()
-    row_accuracies.append(get_accuracy(class_targets, class_preds, accuracy_type="binary"))
-    # print("agree class exact:", get_accuracy(class_targets, class_preds, accuracy_type="exact"))
+    row_accuracies.append(get_accuracy(
+        class_targets, class_preds, accuracy_type="binary"))
 
     text_targets = df_results["moral_agreement_text_targets"].tolist()
     text_preds = df_results["moral_agreement_text_preds"].tolist()
-    exact_match_accuracy, polarity_align_accuracy = get_moral_agreement_text_accuracy(text_targets, text_preds)
+    exact_match_accuracy, polarity_align_accuracy = get_moral_agreement_text_accuracy(
+        text_targets, text_preds)
     row_accuracies.append(polarity_align_accuracy)
-    # print("agree text binary:", polarity_align_accuracy)
     return row_accuracies
 
 
 def eval_compare(row_accuracies, df_results):
     class_targets = df_results["moral_comparison_class_targets"].tolist()
     class_preds = df_results["moral_comparison_class_preds"].tolist()
-    row_accuracies.append(get_accuracy(class_targets, class_preds, accuracy_type="exact"))
+    row_accuracies.append(get_accuracy(
+        class_targets, class_preds, accuracy_type="exact"))
     return row_accuracies
 
 
@@ -47,38 +51,47 @@ def eval_wild_general(row_accuracies, df_results):
     # classification accuracy
     class_targets = df_results["wild_train_100_class_targets"].tolist()
     class_preds = df_results["wild_train_100_class_preds"].tolist()
-    row_accuracies.append(get_accuracy(class_targets, class_preds, accuracy_type="exact"))
-    row_accuracies.append(get_accuracy(class_targets, class_preds, accuracy_type="binary"))
+    row_accuracies.append(get_accuracy(
+        class_targets, class_preds, accuracy_type="exact"))
+    row_accuracies.append(get_accuracy(
+        class_targets, class_preds, accuracy_type="binary"))
 
     # open-text accuracy
     text_class_targets = df_results["wild_v9_text_2_class_targets"].tolist()
     text_class_preds = df_results["wild_v9_text_2_class_preds"].tolist()
 
-    row_accuracies.append(get_accuracy(text_class_targets, text_class_preds, accuracy_type="binary"))
+    row_accuracies.append(get_accuracy(
+        text_class_targets, text_class_preds, accuracy_type="binary"))
     return row_accuracies
 
 
 def eval_race_wild(row_accuracies, df_results):
     class_targets = df_results["race_test_class_targets"].tolist()
     class_preds = df_results["race_test_class_preds"].tolist()
-    row_accuracies.append(get_accuracy(class_targets, class_preds, accuracy_type="exact"))
-    row_accuracies.append(get_accuracy(class_targets, class_preds, accuracy_type="binary"))
+    row_accuracies.append(get_accuracy(
+        class_targets, class_preds, accuracy_type="exact"))
+    row_accuracies.append(get_accuracy(
+        class_targets, class_preds, accuracy_type="binary"))
 
     text_class_targets = df_results["wild_v9_text_2_class_targets"].tolist()
     text_class_preds = df_results["wild_v9_text_2_class_preds"].tolist()
-    row_accuracies.append(get_accuracy(text_class_targets, text_class_preds, accuracy_type="binary"))
+    row_accuracies.append(get_accuracy(
+        text_class_targets, text_class_preds, accuracy_type="binary"))
     return row_accuracies
 
 
 def eval_gender_wild(row_accuracies, df_results):
     class_targets = df_results["gender_test_class_targets"].tolist()
     class_preds = df_results["gender_test_class_preds"].tolist()
-    row_accuracies.append(get_accuracy(class_targets, class_preds, accuracy_type="exact"))
-    row_accuracies.append(get_accuracy(class_targets, class_preds, accuracy_type="binary"))
+    row_accuracies.append(get_accuracy(
+        class_targets, class_preds, accuracy_type="exact"))
+    row_accuracies.append(get_accuracy(
+        class_targets, class_preds, accuracy_type="binary"))
 
     text_class_targets = df_results["wild_v9_text_2_class_targets"].tolist()
     text_class_preds = df_results["wild_v9_text_2_class_preds"].tolist()
-    row_accuracies.append(get_accuracy(text_class_targets, text_class_preds, accuracy_type="binary"))
+    row_accuracies.append(get_accuracy(
+        text_class_targets, text_class_preds, accuracy_type="binary"))
     # print("accept text binary:", get_accuracy(text_class_targets, text_class_preds, accuracy_type="binary"))
     return row_accuracies
 
@@ -233,11 +246,12 @@ def select_check_point(data_split, model_type, pt_model, bs, check_points):
     bucket = client.get_bucket(bucket_name)
 
     result_prefix = f"projects/liweij/mosaic-commonsense-morality/results/{data_version}/" \
-                      f"{pt_model}/{model_type}/lr-{lr}_bs-{bs}/" \
-                      f"moral_acceptability/{data_split}/"
+        f"{pt_model}/{model_type}/lr-{lr}_bs-{bs}/" \
+        f"moral_acceptability/{data_split}/"
 
     if check_points == None:
-        check_points = get_result_check_points(client, bucket_name, result_prefix, after_check_point=-1)
+        check_points = get_result_check_points(
+            client, bucket_name, result_prefix, after_check_point=-1)
         # [1:]
 
     accuracies = []
@@ -296,11 +310,12 @@ def select_check_point_certain(data_split, model_type, pt_model, bs, check_point
     bucket = client.get_bucket(bucket_name)
 
     result_prefix = f"projects/liweij/mosaic-commonsense-morality/results/{data_version}/" \
-                      f"{pt_model}/{model_type}/lr-{lr}_bs-{bs}/" \
-                      f"moral_acceptability/{data_split}/"
+        f"{pt_model}/{model_type}/lr-{lr}_bs-{bs}/" \
+        f"moral_acceptability/{data_split}/"
 
     if check_points == None:
-        check_points = get_result_check_points(client, bucket_name, result_prefix, after_check_point=-1)
+        check_points = get_result_check_points(
+            client, bucket_name, result_prefix, after_check_point=-1)
         # [1:]
 
     accuracies = []
@@ -349,37 +364,10 @@ def select_check_point_certain(data_split, model_type, pt_model, bs, check_point
 
 
 if __name__ == "__main__":
-    # select_check_point_large_compositionality_ablation()
-
-    # select_check_point_large_wild_ablation()
     check_points = None
-
 
     model_type = "sbic_commonsense_morality_joint_all_proportional"
     pt_model = "unicorn-pt"
     bs = 16
     check_points = [1264700, 1239200]
-    # select_check_point("validation", model_type, pt_model, bs, check_points)
     select_check_point_certain("test", model_type, pt_model, bs, check_points)
-
-    # model_type = "sbic_commonsense_morality_joint_all_proportional_new_0.1"
-    # pt_model = "11B"
-    # bs = 16
-    # check_points = [1081600]
-    # # check_points = None
-    # select_check_point("validation", model_type, pt_model, bs, check_points)
-    # select_check_point("test", model_type, pt_model, bs, check_points)
-
-    # model_type = "sbic_commonsense_morality_joint_all_proportional_new_0.01"
-    # pt_model = "11B"
-    # bs = 16
-    # check_points = [1040800]
-    # select_check_point("validation", model_type, pt_model, bs, check_points)
-    # select_check_point("test", model_type, pt_model, bs, check_points)
-
-    # model_type = "sbic_commonsense_morality_joint_all_proportional"
-    # pt_model = "11B"
-    # bs = 16
-    # check_points = [1224400]
-    # select_check_point("validation", model_type, pt_model, bs, check_points)
-    # select_check_point("test", model_type, pt_model, bs, check_points)

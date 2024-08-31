@@ -8,7 +8,8 @@ def get_gold_single_input_task_class(bucket, bucket_name, base_path, data_versio
     """
     Get gold inputs and targets class labels
     """
-    data_base_path = f"gs://{bucket_name}/" + "/".join(base_path.split("/")[:3]) + "/data"
+    data_base_path = f"gs://{bucket_name}/" + \
+        "/".join(base_path.split("/")[:3]) + "/data"
     df_inputs = pd.read_csv(data_base_path + f"/{data_version}_sbic_joint/{task_name}/"
                                              f"{data_split}.{task_name}.tsv", sep="\t")
 
@@ -17,7 +18,8 @@ def get_gold_single_input_task_class(bucket, bucket_name, base_path, data_versio
 
     targets_all = list(df_inputs["targets"])
 
-    targets = [int(i.split("</class> <text>")[0].split("<class>")[-1]) for i in targets_all]
+    targets = [int(i.split("</class> <text>")[0].split("<class>")[-1])
+               for i in targets_all]
     return inputs, targets
 
 
@@ -25,13 +27,16 @@ def get_pred_single_input_task_class(bucket, base_path, task_name, check_point):
     """
         Get preds class labels
     """
-    preds_blob = bucket.get_blob(base_path + f"sbic_{task_name}_{check_point}_predictions")
-    preds_blob_list = preds_blob.download_as_string().decode('utf-8').split("\n")[1:]
+    preds_blob = bucket.get_blob(
+        base_path + f"sbic_{task_name}_{check_point}_predictions")
+    preds_blob_list = preds_blob.download_as_string().decode(
+        'utf-8').split("\n")[1:]
 
     preds_class = []
     for i in preds_blob_list:
         try:
-            preds_class.append(int(i.split(" ⁇ /class>  ⁇ text>")[0].split(" ⁇ class>")[-1]))
+            preds_class.append(
+                int(i.split(" ⁇ /class>  ⁇ text>")[0].split(" ⁇ class>")[-1]))
         except:
             print("output form not identifiable:", i)
             preds_class.append(1)
@@ -40,7 +45,8 @@ def get_pred_single_input_task_class(bucket, base_path, task_name, check_point):
 
 
 def get_gold_single_input_task_class_wild_v9(bucket, bucket_name, base_path, data_version, task_name, data_split):
-    data_base_path = f"gs://{bucket_name}/" + "/".join(base_path.split("/")[:3]) + "/data"
+    data_base_path = f"gs://{bucket_name}/" + \
+        "/".join(base_path.split("/")[:3]) + "/data"
 
     if data_split == "validation":
         df_inputs = pd.read_csv(data_base_path + f"/{data_version}_wild/"
@@ -60,7 +66,6 @@ def get_gold_single_input_task_class_wild_v9(bucket, bucket_name, base_path, dat
     inputs_all = list(df_inputs["inputs"])
     targets_all = list(df_inputs["targets"])
 
-    # inputs = [i.split("[moral_single]: ")[-1] for i in inputs_all]
     inputs = []
     for _, i in enumerate(inputs_all):
         if type(i) != type(""):
@@ -69,27 +74,29 @@ def get_gold_single_input_task_class_wild_v9(bucket, bucket_name, base_path, dat
         else:
             inputs.append(i.split("[moral_single]: ")[-1])
 
-
-    # targets = [int(i.split("</class> <text>")[0].split("<class>")[-1]) for i in targets_all]
     targets = []
     for _, i in enumerate(targets_all):
         if type(i) != type(""):
             print("gold class output error:", _, i, inputs_all[_])
             targets.append(0)
         else:
-            targets.append(int(i.split("</class> <text>")[0].split("<class>")[-1]))
+            targets.append(int(i.split("</class> <text>")
+                           [0].split("<class>")[-1]))
 
     return inputs, targets
 
 
 def get_pred_single_input_task_class_wild_v9(bucket, base_path, task_name, check_point):
-    preds_blob = bucket.get_blob(base_path + f"{task_name}_{check_point}_predictions")
-    preds_blob_list = preds_blob.download_as_string().decode('utf-8').split("\n")[1:]
+    preds_blob = bucket.get_blob(
+        base_path + f"{task_name}_{check_point}_predictions")
+    preds_blob_list = preds_blob.download_as_string().decode(
+        'utf-8').split("\n")[1:]
 
     preds_class = []
     for i in preds_blob_list:
         try:
-            preds_class.append(int(i.split(" ⁇ /class>  ⁇ text>")[0].split(" ⁇ class>")[-1]))
+            preds_class.append(
+                int(i.split(" ⁇ /class>  ⁇ text>")[0].split(" ⁇ class>")[-1]))
         except:
             print("output form not identifiable:", i)
             preds_class.append(1)
@@ -98,25 +105,30 @@ def get_pred_single_input_task_class_wild_v9(bucket, base_path, task_name, check
 
 ########################  moral acceptability/agreement text ########################
 def get_gold_single_input_task_text(bucket, bucket_name, base_path, data_version, task_name, data_split):
-    data_base_path = f"gs://{bucket_name}/" + "/".join(base_path.split("/")[:3]) + "/data"
+    data_base_path = f"gs://{bucket_name}/" + \
+        "/".join(base_path.split("/")[:3]) + "/data"
     df_inputs = pd.read_csv(data_base_path + f"/{data_version}_sbic_joint/{task_name}/"
                                              f"{data_split}.{task_name}.tsv", sep="\t")
     inputs_all = list(df_inputs["inputs"])
     inputs = [s.split("[moral_single]: ")[-1] for s in inputs_all]
 
     targets_all = list(df_inputs["targets"])
-    targets = [i.split("</class> <text>")[1].split("</text>")[0] for i in targets_all]
+    targets = [i.split("</class> <text>")[1].split("</text>")[0]
+               for i in targets_all]
     return inputs, targets
 
 
 def get_pred_single_input_task_text(bucket, base_path, task_name, check_point):
-    preds_blob = bucket.get_blob(base_path + f"sbic_{task_name}_{check_point}_predictions")
-    preds_blob_list = preds_blob.download_as_string().decode('utf-8').split("\n")[1:]
+    preds_blob = bucket.get_blob(
+        base_path + f"sbic_{task_name}_{check_point}_predictions")
+    preds_blob_list = preds_blob.download_as_string().decode(
+        'utf-8').split("\n")[1:]
 
     preds_text = []
     for i in preds_blob_list:
         try:
-            preds_text.append(i.split(" ⁇ /class>  ⁇ text>")[1].split(" ⁇ /text")[0])
+            preds_text.append(i.split(" ⁇ /class>  ⁇ text>")
+                              [1].split(" ⁇ /text")[0])
         except:
             print("output form not identifiable:", i)
             preds_text.append("")
@@ -124,7 +136,8 @@ def get_pred_single_input_task_text(bucket, base_path, task_name, check_point):
 
 
 def get_gold_single_input_task_text_wild_v9(bucket, bucket_name, base_path, data_version, task_name, data_split):
-    data_base_path = f"gs://{bucket_name}/" + "/".join(base_path.split("/")[:3]) + "/data"
+    data_base_path = f"gs://{bucket_name}/" + \
+        "/".join(base_path.split("/")[:3]) + "/data"
 
     if data_split == "validation":
         df_inputs = pd.read_csv(data_base_path + f"/{data_version}_wild/"
@@ -152,8 +165,6 @@ def get_gold_single_input_task_text_wild_v9(bucket, bucket_name, base_path, data
         else:
             inputs.append(i.split("[moral_single]: ")[-1])
 
-
-    # targets = [int(i.split("</class> <text>")[0].split("<class>")[-1]) for i in targets_all]
     targets = []
     for _, i in enumerate(targets_all):
         if type(i) != type(""):
@@ -166,13 +177,16 @@ def get_gold_single_input_task_text_wild_v9(bucket, bucket_name, base_path, data
 
 
 def get_pred_single_input_task_text_wild_v9(bucket, base_path, task_name, check_point):
-    preds_blob = bucket.get_blob(base_path + f"{task_name}_{check_point}_predictions")
-    preds_blob_list = preds_blob.download_as_string().decode('utf-8').split("\n")[1:]
+    preds_blob = bucket.get_blob(
+        base_path + f"{task_name}_{check_point}_predictions")
+    preds_blob_list = preds_blob.download_as_string().decode(
+        'utf-8').split("\n")[1:]
 
     preds_text = []
     for i in preds_blob_list:
         try:
-            preds_text.append(i.split(" ⁇ /class>  ⁇ text>")[1].split(" ⁇ /text")[0])
+            preds_text.append(i.split(" ⁇ /class>  ⁇ text>")
+                              [1].split(" ⁇ /text")[0])
         except:
             print("output form not identifiable:", i)
             preds_text.append("")
@@ -181,7 +195,8 @@ def get_pred_single_input_task_text_wild_v9(bucket, base_path, task_name, check_
 
 ########################  moral comparison class ########################
 def get_gold_moral_comparison_class(bucket, bucket_name, base_path, data_version, data_split):
-    data_base_path = f"gs://{bucket_name}/" + "/".join(base_path.split("/")[:3]) + "/data"
+    data_base_path = f"gs://{bucket_name}/" + \
+        "/".join(base_path.split("/")[:3]) + "/data"
     df_inputs = pd.read_csv(data_base_path + f"/{data_version}_sbic_joint/moral_comparison/"
                                              f"{data_split}.moral_comparison.tsv", sep="\t")
     inputs_all = list(df_inputs["inputs"])
@@ -194,10 +209,11 @@ def get_gold_moral_comparison_class(bucket, bucket_name, base_path, data_version
 
 
 def get_pred_moral_comparison_class(bucket, base_path, check_point):
-    preds_blob = bucket.get_blob(base_path + f"sbic_moral_comparison_{check_point}_predictions")
-    preds_blob_list = preds_blob.download_as_string().decode('utf-8').split("\n")[1:]
+    preds_blob = bucket.get_blob(
+        base_path + f"sbic_moral_comparison_{check_point}_predictions")
+    preds_blob_list = preds_blob.download_as_string().decode(
+        'utf-8').split("\n")[1:]
     return [int(i) for i in preds_blob_list]
-
 
 
 ########################  main ########################
@@ -376,7 +392,8 @@ def main_get_accuracy(base_path, data_split, check_points=None,
     bucket = client.get_bucket(bucket_name)
 
     if check_points == None:
-        check_points = get_check_points(client, bucket_name, result_prefix, after_check_point=-1)[1:]
+        check_points = get_check_points(
+            client, bucket_name, result_prefix, after_check_point=-1)[1:]
     # check_points.sort(reverse=True)
 
     for check_point in check_points:
@@ -430,29 +447,6 @@ def main_get_accuracy(base_path, data_split, check_points=None,
 
 
 if __name__ == "__main__":
-    # main_get_accuracy_large_wild_ablation()
-    # main_get_accuracy_large_compositionality_ablation()
-
     base_path = "ai2-tpu-europe-west4/projects/liweij/mosaic-commonsense-morality/model/v9/unicorn-pt/sbic_commonsense_morality_joint_all_proportional/lr-0.0001_bs-16/"
     check_points = [1264700, 1239200]
-    # main_get_accuracy(base_path, "validation", None)
     main_get_accuracy(base_path, "test", check_points)
-
-    # base_path = "ai2-tpu-europe-west4/projects/liweij/mosaic-commonsense-morality/model/v9/11B/sbic_commonsense_morality_joint_all_proportional_new_0.1/lr-0.0001_bs-16/"
-    # check_points = [1081600]
-    # check_points = None
-    # main_get_accuracy(base_path, "validation", check_points, False, False, False, False, False)
-    # main_get_accuracy(base_path, "test", check_points) # , False, False, False, False, False
-
-
-    # base_path = "ai2-tpu-europe-west4/projects/liweij/mosaic-commonsense-morality/model/v9/11B/sbic_commonsense_morality_joint_all_proportional_new_0.01/lr-0.0001_bs-16/"
-    # check_points = [1040800]
-    # main_get_accuracy(base_path, "validation", check_points)
-    # main_get_accuracy(base_path, "test", check_points)
-
-    # base_path = "ai2-tpu-europe-west4/projects/liweij/mosaic-commonsense-morality/model/v9/11B/sbic_commonsense_morality_joint_all_proportional/lr-0.0001_bs-16/"
-    # check_points = [1224400]
-    # main_get_accuracy(base_path, "validation", check_points)
-    # main_get_accuracy(base_path, "test", check_points)
-
-
