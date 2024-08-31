@@ -11,17 +11,24 @@ As our society adopts increasingly powerful AI systems for pervasive use, there 
 This codebase contains the training and evaluation code for Delphi, Delphi+, and the Delphi-Hybrid system.
 
 ### Delphi:
-`src/delphi/evaluate`: scripts for evaluating the Delphi models on the yes/no QA and freeform QA tasks, as well as downstream tasks like Hate Speech Detection.
-`src/delphi/train`: the scripts for finetuning T5 for Delphi.
+
+- `src/delphi/evaluate`: scripts for evaluating the Delphi models on the yes/no QA and freeform QA tasks, as well as downstream tasks like Hate Speech Detection.
+
+- `src/delphi/train`: the scripts for finetuning T5 for Delphi.
 
 ### Delphi+:
-`src/delphi_plus/evaluate`: scripts for evaluating the Delphi+ models on the yes/no QA and freeform QA tasks, as well as downstream tasks like Hate Speech Detection.
-`src/delphi/train`: the scripts for finetuning T5 for Delphi+.
+
+- `src/delphi_plus/evaluate`: scripts for evaluating the Delphi+ models on the yes/no QA and freeform QA tasks, as well as downstream tasks like Hate Speech Detection.
+
+- `src/delphi/train`: the scripts for finetuning T5 for Delphi+.
 
 ### Delphi-Hybrid:
-`src/delphi_plus/collective_reasoning`: codebase for the collective reasoning component of Delphi-Hybrid.
-`src/delphi/components`: components of the Delphi-Hybrid system.
-`src/delphi/prepare_data`: scripts for preparing test data for Delphi-Hybrid experiments.
+
+- `src/delphi_plus/collective_reasoning`: codebase for the collective reasoning component of Delphi-Hybrid.
+
+- `src/delphi/components`: components of the Delphi-Hybrid system.
+
+- `src/delphi/prepare_data`: scripts for preparing test data for Delphi-Hybrid experiments.
 
 
 ## Data and Model Access
