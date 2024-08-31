@@ -6,16 +6,12 @@ from tqdm import tqdm
 
 sys.path.append(os.getcwd())
 
-from scripts.utils.utils import *
-from scripts.utils.constants import *
-from scripts.utils.bank import *
-from scripts.utils.MoralSaliencyKeywordIdentifier import *
-from scripts.utils.CompositionalityParser import *
-from scripts.utils.PersonDetector import *
-
-# pd.set_option("display.max_columns", None)  # or 1000
-# pd.set_option("display.max_rows", None)  # or 1000
-# pd.set_option("display.max_colwidth", -1)  # or 199
+from src.delphi_hybrid.components.utils import *
+from src.delphi_hybrid.components.constants import *
+from src.delphi_hybrid.components.bank import *
+from src.delphi_hybrid.components.MoralSaliencyKeywordIdentifier import *
+from src.delphi_hybrid.components.CompositionalityParser import *
+from src.delphi_hybrid.components.PersonDetector import *
 
 class BaseRuler():
     def __init__(self):
@@ -309,11 +305,6 @@ class BaseRuler():
             self.events_by_agreement_rate["certain"][split] = self.events_by_agreement_rate[1][split]
             self.events_by_agreement_rate["ambiguous"][split] = self.events_by_agreement_rate[0.6][split] + \
                                                                 self.events_by_agreement_rate[0.8][split]
-        # for split in ["train", "test", "dev"]:
-        #     print("-" * 10, split, "-" * 10)
-        #     for i in [1, 0.8, 0.6, "all", "certain", "ambiguous"]:
-        #         print(i, "|", len(self.events_by_split[split][i]))
-        #         print(i, "|", len(self.events_by_agreement_rate[i][split]))
 
     def _init_constituents_map(self, is_save=False):
         data_path = data_base_path + f"{self.cache_name}/constituents/{self.data_type}_constituents.json"
@@ -347,21 +338,6 @@ class BaseRuler():
             self.all_sequences = read_json(all_sequences_path)
             for e in tqdm(self.all_sequences):
                 self.raw_keywords_counts_map, self.all_sequences = add_instance(e, self.raw_keywords_counts_map, self.all_sequences)
-
-                # e_compositions_raw = self.constituents_map[e]
-                # e_compositions = [e_compositions_raw[t] for t in self.all_event_types[1:] if
-                #                   e_compositions_raw[t] != None]
-                #
-                # for ce in e_compositions:
-                #     self.raw_keywords_counts_map, self.all_sequences = add_instance(ce, self.raw_keywords_counts_map, self.all_sequences)
-                #
-                # for p in self.paraphrases_cache[e]:
-                #     self.raw_keywords_counts_map, self.all_sequences = add_instance(p, self.raw_keywords_counts_map, self.all_sequences)
-                #
-                #     p_compositions_raw = self.compose_parser.get_parsed_event(p)
-                #     p_compositions = [p_compositions_raw[t] for t in self.all_event_types[1:] if p_compositions_raw[t] != None]
-                #     for cp in p_compositions:
-                #         self.raw_keywords_counts_map, self.all_sequences = add_instance(cp, self.raw_keywords_counts_map, self.all_sequences)
 
             save_json(data_path, self.raw_keywords_counts_map)
             print(f"* Moral Saliency Keywords map loaded! ({len(self.raw_keywords_counts_map)})")

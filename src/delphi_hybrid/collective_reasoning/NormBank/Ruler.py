@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 sys.path.append(os.getcwd())
 
-from scripts.collective_reasoning.NormBank.BaseRuler import *
+from src.delphi_hybrid.collective_reasoning.NormBank.BaseRuler import *
 
 
 class Ruler(BaseRuler):

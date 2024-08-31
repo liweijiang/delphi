@@ -1,3 +1,7 @@
+"""
+Evaluation util file for mapping text labels to class labels.
+"""
+
 text2class = {
     "ideal": 1,
     "heroic": 1,

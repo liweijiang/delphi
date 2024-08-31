@@ -70,31 +70,9 @@ def evaluate(
     # Validate arguments
     util.validate_path(results_dir)
 
-    # Get checkpoints to be evaluated
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_cm")
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_deontology")
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_justice")
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_util")
-    # checkpoints = util.get_result_check_points(results_dir, split, "dynahate_all_st")
-    # checkpoints = util.get_result_check_points(results_dir, split, "dynahate_round_1_yesno")
-    # checkpoints = util.get_result_check_points(results_dir, split, "dynahate_round_1_yesno_class_only")
-    # checkpoints = util.get_result_check_points(results_dir, split, "dynahate_round_2_discriminate")
-    # checkpoints = util.get_result_check_points(results_dir, split, "latenthatred")
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_deontology_converted")
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_justice_converted")
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_util_converted")
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_virtue_converted")
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_cm_converted")
-
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_deontology_converted_class_only")
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_justice_converted_class_only")
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_util_converted_class_only")
-    # checkpoints = util.get_result_check_points(results_dir, split, "ethics_virtue_converted_class_only")
     checkpoints = util.get_result_check_points(results_dir, split, "ethics_cm_converted_class_only")
 
-
     print("-" * 10, "checkpoints todo", "-" * 10)
-    # checkpoints.sort(reverse=True)
 
     if checkpoint == 100:
         checkpoints_to_eval = None

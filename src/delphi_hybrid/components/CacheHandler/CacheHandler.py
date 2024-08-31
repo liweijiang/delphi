@@ -10,7 +10,7 @@ import json
 from tqdm import tqdm
 
 sys.path.append(os.getcwd())
-from scripts.utils.utils import *
+from src.delphi_hybrid.components.utils import *
 
 class CacheHandler():
     __metaclass__ = abc.ABCMeta

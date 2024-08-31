@@ -9,8 +9,7 @@ import itertools as it
 from scipy.stats import ttest_ind, chisquare
 
 sys.path.append(os.getcwd())
-
-from scripts.collective_reasoning.ITW.Ruler import *
+from src.delphi_hybrid.collective_reasoning.ITW.Ruler import *
 
 rng = np.random.default_rng()
 
@@ -19,17 +18,9 @@ class EnsembleRuler(Ruler):
     def __init__(self, mode="hybrid"):
         super().__init__()
 
-        # self.vertex_weights = {"delphi": 4,
-        #                        "rule": 3,
-        #                        "constituent": 1}  # up-weight delphi predictions on event and paraphrases
-
-        # self.vertex_weights = {"delphi": 3,
-        #                        "rule": 1,
-        #                        "constituent": 1}  # up-weight delphi predictions on event and paraphrases
-
         self.vertex_weights = {"delphi": 8,
                                "rule": 3,
-                               "constituent": 1}  # up-weight delphi predictions on event and paraphrases
+                               "constituent": 1}
 
         print(self.vertex_weights)
 
@@ -66,11 +57,14 @@ class EnsembleRuler(Ruler):
         maj_vote_class_label_preds = []
         for event in events:
             class_labels_preds = class_label_preds[event][column_selected]
-            if len(class_labels_preds) == 0: # if the judgment pool has no nodes, assign 0 to the label
+            # if the judgment pool has no nodes, assign 0 to the label
+            if len(class_labels_preds) == 0:
                 maj_vote_class_label_pred = 0
             else:
-                maj_vote_class_label_pred = max(set(class_labels_preds), key=class_labels_preds.count)
-            class_label_preds[event][column_selected + "_maj_vote"] = maj_vote_class_label_pred
+                maj_vote_class_label_pred = max(
+                    set(class_labels_preds), key=class_labels_preds.count)
+            class_label_preds[event][column_selected +
+                                     "_maj_vote"] = maj_vote_class_label_pred
             maj_vote_class_label_preds.append(maj_vote_class_label_pred)
         return maj_vote_class_label_preds, class_label_preds
 
@@ -120,7 +114,8 @@ class EnsembleRuler(Ruler):
 
             # Soft constraints: do not include two contradicting rules (weight 1)
             for e in edges:
-                f.write(str(1) + " -" + str(e["v0"]) + " -" + str(e["v1"]) + " 0")
+                f.write(str(1) + " -" +
+                        str(e["v0"]) + " -" + str(e["v1"]) + " 0")
                 f.write('\n')
 
         res_file = output_folder + "wcnf_output.txt"
@@ -146,7 +141,8 @@ class EnsembleRuler(Ruler):
             if a < 0:
                 max_sat_raw_vertex_id_assignment.append(vertex_id * -1)
             else:
-                selected_class_label_preds.append(class_label_preds[event]["class_label_preds"][idx])
+                selected_class_label_preds.append(
+                    class_label_preds[event]["class_label_preds"][idx])
                 max_sat_raw_vertex_id_assignment.append(vertex_id)
                 max_sat_selected_idx.append(idx)
 
@@ -214,7 +210,8 @@ class EnsembleRuler(Ruler):
                 else:
                     weight = self.vertex_weights["rule"]
 
-                v = {"v": vertex_id, "v_idx": idx, "v_rule": rule_id, "w": weight}
+                v = {"v": vertex_id, "v_idx": idx,
+                     "v_rule": rule_id, "w": weight}
                 vertices.append(v)
                 vertex_id2idx[vertex_id] = idx
                 vertex_id += 1
@@ -231,8 +228,10 @@ class EnsembleRuler(Ruler):
             idx_pairs = self._get_combinatory_pairs(idxs_with_moral_concept)
 
             for idx0, idx1 in idx_pairs:
-                rule_0_class_label_pred = self._get_class_label_pred(class_label_preds, event, idx0)
-                rule_1_class_label_pred = self._get_class_label_pred(class_label_preds, event, idx1)
+                rule_0_class_label_pred = self._get_class_label_pred(
+                    class_label_preds, event, idx0)
+                rule_1_class_label_pred = self._get_class_label_pred(
+                    class_label_preds, event, idx1)
                 is_identity_constraint_violated = self.is_identity_constraint_violated(rule_0_class_label_pred,
                                                                                        rule_1_class_label_pred)
                 if is_identity_constraint_violated:
@@ -252,8 +251,10 @@ class EnsembleRuler(Ruler):
 
             for idx0 in c0_idxs:
                 for idx1 in c1_idxs:
-                    rule_0_class_label_pred = self._get_class_label_pred(class_label_preds, event, idx0)
-                    rule_1_class_label_pred = self._get_class_label_pred(class_label_preds, event, idx1)
+                    rule_0_class_label_pred = self._get_class_label_pred(
+                        class_label_preds, event, idx0)
+                    rule_1_class_label_pred = self._get_class_label_pred(
+                        class_label_preds, event, idx1)
                     is_moral_saliency_entailment_constraint_violated = \
                         self.is_moral_saliency_entailment_constraint_violated(rule_0_class_label_pred,
                                                                               rule_1_class_label_pred)
@@ -274,8 +275,10 @@ class EnsembleRuler(Ruler):
 
             for idx0 in c0_idxs:
                 for idx1 in c1_idxs:
-                    rule_0_class_label_pred = self._get_class_label_pred(class_label_preds, event, idx0)
-                    rule_1_class_label_pred = self._get_class_label_pred(class_label_preds, event, idx1)
+                    rule_0_class_label_pred = self._get_class_label_pred(
+                        class_label_preds, event, idx0)
+                    rule_1_class_label_pred = self._get_class_label_pred(
+                        class_label_preds, event, idx1)
                     is_moral_valency_entailment_constraint_violated = \
                         self.is_moral_valency_entailment_constraint_violated(rule_0_class_label_pred,
                                                                              rule_1_class_label_pred)
@@ -295,8 +298,10 @@ class EnsembleRuler(Ruler):
 
             for idx0 in c0_idxs:
                 for idx1 in c1_idxs:
-                    rule_0_class_label_pred = self._get_class_label_pred(class_label_preds, event, idx0)
-                    rule_1_class_label_pred = self._get_class_label_pred(class_label_preds, event, idx1)
+                    rule_0_class_label_pred = self._get_class_label_pred(
+                        class_label_preds, event, idx0)
+                    rule_1_class_label_pred = self._get_class_label_pred(
+                        class_label_preds, event, idx1)
                     is_kill_entailment_constraint_violated = self.is_kill_entailment_constraint_violated(
                         rule_0_class_label_pred, rule_1_class_label_pred)
                     if is_kill_entailment_constraint_violated:
@@ -310,14 +315,17 @@ class EnsembleRuler(Ruler):
         """
         <BOTTOM-UP> delphi preds vs. top-down rules
         """
-        all_bottom_up_moral_concepts = [c for c in self.rule_sets if c not in ["base"]]
+        all_bottom_up_moral_concepts = [
+            c for c in self.rule_sets if c not in ["base"]]
         c0_idxs = moral_concept2idxs["base"]
         for c1 in all_bottom_up_moral_concepts:
             c1_idxs = moral_concept2idxs[c1]
             for idx0 in c0_idxs:
                 for idx1 in c1_idxs:
-                    rule_0_class_label_pred = self._get_class_label_pred(class_label_preds, event, idx0)
-                    rule_1_class_label_pred = self._get_class_label_pred(class_label_preds, event, idx1)
+                    rule_0_class_label_pred = self._get_class_label_pred(
+                        class_label_preds, event, idx0)
+                    rule_1_class_label_pred = self._get_class_label_pred(
+                        class_label_preds, event, idx1)
                     is_identity_constraint_violated = self.is_identity_constraint_violated(rule_0_class_label_pred,
                                                                                            rule_1_class_label_pred)
                     if is_identity_constraint_violated:
@@ -332,7 +340,8 @@ class EnsembleRuler(Ruler):
         rule_id: rule_name, e.g., delphi, s_moral_saliency
         moral_concept: top-level keywords of "rule_sets", e.g., moral_saliency
         """
-        idx2rule_id = {idx: rule_id for idx, rule_id in enumerate(class_label_preds[event]["rule_id"])}
+        idx2rule_id = {idx: rule_id for idx, rule_id in enumerate(
+            class_label_preds[event]["rule_id"])}
         # rule_id2idx = {v: k for k, v in idx2rule_id.items()}
 
         moral_concept2idxs = {moral_concept: [idx for idx, rule_id in enumerate(class_label_preds[event]["rule_id"])
@@ -340,7 +349,8 @@ class EnsembleRuler(Ruler):
                                                   "is_affected"][idx]] for moral_concept in self.rule_sets}
 
         """***** ADD VERTICES *****"""
-        vertices, vertex_id2idx, idx2vertex_id = self.get_vertices(event, class_label_preds)
+        vertices, vertex_id2idx, idx2vertex_id = self.get_vertices(
+            event, class_label_preds)
         class_label_preds[event]["vertices"] = vertices
 
         """***** ADD EDGES *****"""
@@ -360,7 +370,8 @@ class EnsembleRuler(Ruler):
         res_file = self.optimize(vertices, edges)
 
         """***** Consolidate Optimized Results *****"""
-        class_label_preds = self.optimize_results(event, class_label_preds, res_file, vertex_id2idx)
+        class_label_preds = self.optimize_results(
+            event, class_label_preds, res_file, vertex_id2idx)
 
         return class_label_preds
 
@@ -369,49 +380,48 @@ class EnsembleRuler(Ruler):
             print("-" * 20, split, "-" * 20)
             for num_way in [2, 3]:
                 print("*" * 10, f"{num_way}-way classification", "*" * 10)
-                for agreement_rate in ["all", 1, "ambiguous"]:  # [1, 0.8, 0.6, "ambiguous", "all"]
+                # [1, 0.8, 0.6, "ambiguous", "all"]
+                for agreement_rate in ["all", 1, "ambiguous"]:
                     # print("* agreement_rate:", agreement_rate, "*")
                     events_split = self.events_by_agreement_rate[agreement_rate][split]
 
                     maj_vote_class_label_preds, class_label_preds = \
-                        self._get_maj_vote_class_label_preds(events_split, class_label_preds, "affected_class_label_preds")
+                        self._get_maj_vote_class_label_preds(
+                            events_split, class_label_preds, "affected_class_label_preds")
 
                     max_sat_maj_vote_class_label_preds, class_label_preds = \
-                        self._get_maj_vote_class_label_preds(events_split, class_label_preds, "max_sat_class_label_preds")
+                        self._get_maj_vote_class_label_preds(
+                            events_split, class_label_preds, "max_sat_class_label_preds")
 
-                    delphi_class_label_preds = [self.delphi_cache[event]["class_label"] for event in events_split]
-                    class_label_targets = [class_label_preds[event]["class_label_targets"][0] for event in events_split]
+                    delphi_class_label_preds = [
+                        self.delphi_cache[event]["class_label"] for event in events_split]
+                    class_label_targets = [
+                        class_label_preds[event]["class_label_targets"][0] for event in events_split]
 
-                    maj_vote_is_correct = self.get_class_label_correct(maj_vote_class_label_preds, class_label_targets, num_way)
+                    maj_vote_is_correct = self.get_class_label_correct(
+                        maj_vote_class_label_preds, class_label_targets, num_way)
                     maj_vote_acc = self.get_accuracy(maj_vote_is_correct)
 
                     max_sat_maj_vote_is_correct = self.get_class_label_correct(max_sat_maj_vote_class_label_preds,
                                                                                class_label_targets, num_way)
-                    max_sat_acc = self.get_accuracy(max_sat_maj_vote_is_correct)
+                    max_sat_acc = self.get_accuracy(
+                        max_sat_maj_vote_is_correct)
 
-                    delphi_is_correct = self.get_class_label_correct(delphi_class_label_preds, class_label_targets, num_way)
+                    delphi_is_correct = self.get_class_label_correct(
+                        delphi_class_label_preds, class_label_targets, num_way)
                     delphi_acc = self.get_accuracy(delphi_is_correct)
-                    # print(f"({num_way}-way) Raw Maj vote: {:5.1f} | MAX-SAT: {:5.1f} | Delphi: {:5.1f}".format(maj_vote_acc * 100,
-                    #                                                                                   max_sat_acc * 100,
-                    #                                                                                   delphi_acc * 100))
                     print("{:5.1f}\t{:5.1f}\t{:5.1f}".format(
                         delphi_acc * 100,
                         maj_vote_acc * 100,
                         max_sat_acc * 100))
-
-                    # res = ttest_ind(delphi_is_correct,
-                    #                 max_sat_maj_vote_is_correct,
-                    #                 permutations=1000,
-                    #                 random_state=rng)
-                    # print(f"({num_way}-way) MAX-SAT p-value w/ Delphi:", "%0.10f" % res[1])
-
 
     def get_rule_labels(self, splits, agreement_rate=1, num_way=2, is_print=False):
         # events = self.events
         events = []
         for split in splits:
             events += self.events_by_split[split]["all"]
-        class_label_targets = [self.gold_data_map[event]["class_label"] for event in events]
+        class_label_targets = [self.gold_data_map[event]
+                               ["class_label"] for event in events]
         class_label_preds = {event: {"class_label_preds": [], "affected_class_label_preds": [], "is_affected": [],
                                      "rule_id": [], "paraphrase": [], "class_label_targets": []} for event in events}
 
@@ -441,10 +451,13 @@ class EnsembleRuler(Ruler):
                 class_label_preds_split = []
                 class_label_targets_split = []
                 for event in events_split:
-                    class_label_preds_split.append(class_label_preds[event]["affected_class_label_preds_maj_vote"])
-                    class_label_targets_split.append(class_label_preds[event]["class_label_targets"][0])
+                    class_label_preds_split.append(
+                        class_label_preds[event]["affected_class_label_preds_maj_vote"])
+                    class_label_targets_split.append(
+                        class_label_preds[event]["class_label_targets"][0])
 
-                is_correct = self.get_class_label_correct(class_label_preds_split, class_label_targets_split, num_way)
+                is_correct = self.get_class_label_correct(
+                    class_label_preds_split, class_label_targets_split, num_way)
                 acc = self.get_accuracy(is_correct)
                 print(split, ": {:5.2f}%".format(acc * 100))
 
@@ -460,14 +473,17 @@ class EnsembleRuler(Ruler):
                         for i, rule_id in enumerate(class_label_preds[event]["rule_id"]):
                             if rule_id == rule_id_selected:
                                 if class_label_preds[event]["is_affected"][i]:
-                                    class_label_preds_split.append(class_label_preds[event]["class_label_preds"][i])
-                                    class_label_targets_split.append(class_label_preds[event]["class_label_targets"][i])
+                                    class_label_preds_split.append(
+                                        class_label_preds[event]["class_label_preds"][i])
+                                    class_label_targets_split.append(
+                                        class_label_preds[event]["class_label_targets"][i])
 
                     is_correct = self.get_class_label_correct(class_label_preds_split, class_label_targets_split,
                                                               num_way)
                     if len(is_correct) != 0:
                         acc = self.get_accuracy(is_correct)
-                        print(split, ": {:5.2f}%".format(acc * 100), len(class_label_preds_split))
+                        print(split, ": {:5.2f}%".format(
+                            acc * 100), len(class_label_preds_split))
         return class_label_preds
 
     def main_preds2wcnf(self, class_label_preds, splits, is_print=True):
@@ -475,39 +491,17 @@ class EnsembleRuler(Ruler):
 
         for event in tqdm(class_label_preds):
             class_label_preds = self.preds2wcnf(event, class_label_preds)
-        # save_json(f"results/collective_reasoning/outputs/class_label_preds_w_{w}_remove_dup_downweight_constituent.json", class_label_preds)
-
-        # class_label_preds = read_json(f"results/collective_reasoning/outputs/class_label_preds_w_{w}.json")
 
         if is_print:
             self._print_results(class_label_preds, splits)
 
 
 if __name__ == "__main__":
-
-    # for k in class_label_preds[event]:
-    #     print(k, ":", len(class_label_preds[event][k]))
-    #
-    # print("class_label_pred selected", ":", len([i for i in class_label_preds[event]["class_label_preds"] if i != None]))
-    # print("is_affected selected", ":", len([i for i in class_label_preds[event]["is_affected"] if i]))
-
-    # print("-" * 20)
-    # print([i for i, is_affected in enumerate(class_label_preds[event]["is_affected"]) if is_affected])
-    # print(max_sat_selected_idx)
-    # print(max_sat_raw_vertex_id_assignment)
-
-    # for agreement_rate in ["certain", "ambiguous", "all"]:
-    # class_label_preds = delphi_ruler.get_rule_labels(agreement_rate=1)
-    # print(delphi_ruler.main.__name__)
-    # print(delphi_ruler.comet_cache["silently farting in a crowded room"])
-
-    # delphi_ruler.main_top_down_only(class_label_preds)
     print("has valency constraint")
-    for mode in ["hybrid"]: # hybrid", "top", "bottom", "top", "bottom"
+    for mode in ["hybrid"]:  # hybrid", "top", "bottom", "top", "bottom"
         delphi_ruler = EnsembleRuler(mode)
         print("-" * 50)
         print(mode)
         splits = ["train", "dev"]  # "train",
         class_label_preds = delphi_ruler.get_rule_labels(splits=splits)
         delphi_ruler.main_preds2wcnf(class_label_preds, splits=splits)
-

@@ -5,7 +5,7 @@ from treelib import Node, Tree
 from transformers import GPT2LMHeadModel, GPT2TokenizerFast
 
 sys.path.append(os.getcwd())
-from scripts.utils.bank import *
+from src.delphi_hybrid.components.bank import *
 
 
 class COMETGenerator():
@@ -134,33 +134,6 @@ class COMETGenerator():
 if __name__ == "__main__":
     comet_generator = COMETGenerator(device_id=0)
 
-    # head_event = "being an aggressive bear"
-    # head_event = "performing genocide"
-    # head_event = "PersonX killing a stupid bear"
-    # head_event = "PersonX killing an aggressive bear"
-    # head_event = "PersonX killing an ugly bear"
-    # head_event = "killing an ugly bear"
-    # head_event = "being an aggressive bear"
-    # head_event = "an aggressive bear"
-    # head_event = "an ugly bear"
-    # head_event = "a cute bear"
-    # head_event = "a stupid bear"
-    # head_event = "a protected bear"
-    # head_event = "armed hands"
-    # head_event = "bare hands"
-    # head_event = "being ugly"
-    # relation = "xEffect"
-    # head_event = "PersonX kills a bear"
-    # head_event = "performing genocide"
-    # head_event = "drone strike"
-    # head_event = "purify race"
-    # head_event = "being a cute bear"
-    # head_event = "being an ugly bear"
-    # head_event = "being a stupid bear"
-    # head_event = "being an aggressive bear"
-    # head_event = "being a scary bear"
-    # head_event = "a bear"
-
     head_events = ["a bear",
                    "being a stupid bear",
                    "performing genocide",
@@ -169,24 +142,4 @@ if __name__ == "__main__":
     # for head_event in head_events:
     for relation in comet_relations:
         tail_events = comet_generator.generate_beam(head_events[0], relation)
-
-    # "Genocide", "Holocaust", "War", "Sexism", "Racism",
-    # "Drone strike", "Purify race",
-    # "genocide", "holocaust", "war", "sexism", "racism",
-    # "drone strike", "purify race",
-    # "explode a nuclear bomb", "exploding a nuclear bomb",
-    # "killing someone", "murdering someone", "torturing someone", "raping someone",
-    # "kill someone", "murder someone", "torture someone", "rape someone"
-
-
-    # for head_event in head_events:
-    #     tree = Tree()
-    #     tree.create_node("\n" + head_event + "\n", head_event)
-    #
-    #     for relation in comet_relations:
-    #         tail_events = comet_generator.generate_beam(head_event, relation)
-    #
-    #         tail_events_string = " | ".join(tail_events)
-    #         tree.create_node("{:<12} >>> {:>11}".format(relation, tail_events_string), relation, parent=head_event)
-    #
-    #     tree.show()
+        

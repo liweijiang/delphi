@@ -1,18 +1,15 @@
 import os
 import sys
-import numpy as np
-import pandas as pd
-from tqdm import tqdm
 
 sys.path.append(os.getcwd())
-
-from scripts.collective_reasoning.ITW.BaseRuler import *
+from src.delphi_hybrid.collective_reasoning.ITW.BaseRuler import *
 
 
 class Ruler(BaseRuler):
     """
     Class Ruler that implements different instantiations of rules under theoretically motivated moral concepts
     """
+
     def __init__(self):
         super().__init__()
 
@@ -69,7 +66,8 @@ class Ruler(BaseRuler):
                           "do_your_duty": ["e_do_your_duty", "s_do_your_duty"],
                           }
 
-        self.existing_constituents_cache = [] # if a constituents is already added, then skip
+        # if a constituents is already added, then skip
+        self.existing_constituents_cache = []
 
     def _reset_existing_constituents_cache(self):
         self.existing_constituents_cache = []
@@ -86,10 +84,12 @@ class Ruler(BaseRuler):
 
         class_label_preds[event]["class_label_preds"].append(class_label)
         if is_affected:
-            class_label_preds[event]["affected_class_label_preds"].append(class_label)
+            class_label_preds[event]["affected_class_label_preds"].append(
+                class_label)
         class_label_preds[event]["is_affected"].append(is_affected)
         class_label_preds[event]["rule_id"].append(rule_func.__name__)
-        class_label_preds[event]["class_label_targets"].append(class_label_target)
+        class_label_preds[event]["class_label_targets"].append(
+            class_label_target)
         class_label_preds[event]["paraphrase"].append(paraphrase)
         return class_label_preds
 
@@ -99,6 +99,7 @@ class Ruler(BaseRuler):
     """
     ################################# delphi #################################
     """
+
     def delphi(self, event):
         if event in self.existing_constituents_cache:
             return None, False
@@ -133,6 +134,7 @@ class Ruler(BaseRuler):
     """
     ################################# moral_saliency #################################
     """
+
     def e_moral_saliency(self, event):
         is_affected = False
         class_label_pred = None
@@ -174,6 +176,7 @@ class Ruler(BaseRuler):
     """
     ################################# moral_valency #################################
     """
+
     def e_moral_valency_0(self, event):
         is_affected = False
         class_label_pred = None
@@ -182,7 +185,7 @@ class Ruler(BaseRuler):
         # reasonable range, assign label based on the valency of the keywords (negative)
         if self.binary_keywords_counts_map[event][1] == 0 \
                 and self.binary_keywords_counts_map[event][-1] > 10 \
-                    and self.binary_keywords_counts_map[event][-1] < 35:
+            and self.binary_keywords_counts_map[event][-1] < 35:
             class_label_pred = -1
             is_affected = True
 
@@ -224,7 +227,7 @@ class Ruler(BaseRuler):
                 # if the main_event is very negative, and if the adjunct_event doesn't have many morally salient
                 # keywords, then the overall event is most likely to be morally negative
                 if self.binary_keywords_counts_map[main_event][-1] - self.binary_keywords_counts_map[main_event][1] > 6:
-                    class_label_pred= -1
+                    class_label_pred = -1
                     is_affected = True
 
                 # if the main_event is very positive, and if the adjunct_event doesn't have many morally salient
@@ -285,6 +288,7 @@ class Ruler(BaseRuler):
     """
     ################################# moral_impartiality #################################
     """
+
     def e_moral_impartiality_0(self, event):
         is_affected = False
         class_label_pred = None
@@ -351,6 +355,7 @@ class Ruler(BaseRuler):
     """
     ################################# do_not_kill #################################
     """
+
     def e_kill_vs_conscious(self, event):
         is_affected = False
         class_label_pred = None
@@ -445,6 +450,7 @@ class Ruler(BaseRuler):
     """
     ################################# do_not_cause_pain_physical #################################
     """
+
     def e_do_not_cause_pain_physical(self, event):
         is_affected = False
         class_label_pred = None
@@ -490,6 +496,7 @@ class Ruler(BaseRuler):
     """
     ################################# do_not_cause_pain_mental #################################
     """
+
     def e_do_not_cause_pain_mental(self, event):
         is_affected = False
         class_label_pred = None
@@ -529,6 +536,7 @@ class Ruler(BaseRuler):
     """
     ################################# do_not_disable #################################
     """
+
     def e_do_not_disable_0(self, event):
         is_affected = False
         class_label_pred = None
@@ -604,6 +612,7 @@ class Ruler(BaseRuler):
     """
     ################################# do_not_deprive_of_freedom #################################
     """
+
     def e_do_not_deprive_of_freedom_0(self, event):
         is_affected = False
         class_label_pred = None
@@ -653,6 +662,7 @@ class Ruler(BaseRuler):
     """
     ################################# do_not_deprive_of_pleasure #################################
     """
+
     def e_do_not_deprive_of_pleasure_0(self, event):
         is_affected = False
         class_label_pred = None
@@ -702,6 +712,7 @@ class Ruler(BaseRuler):
     """
     ################################# do_not_deceive #################################
     """
+
     def e_do_not_deceive(self, event):
         is_affected = False
         class_label_pred = None
@@ -752,6 +763,7 @@ class Ruler(BaseRuler):
     """
     ################################# do_not_cheat #################################
     """
+
     def e_sex(self, event):
         is_affected = False
         class_label_pred = None
@@ -850,6 +862,7 @@ class Ruler(BaseRuler):
     """
     ################################# obey_the_law #################################
     """
+
     def e_illegal(self, event):
         is_affected = False
         class_label_pred = None
@@ -880,6 +893,7 @@ class Ruler(BaseRuler):
     """
     ################################# do_your_duty #################################
     """
+
     def e_do_your_duty(self, event):
         is_affected = False
         class_label_pred = None
@@ -909,5 +923,5 @@ if __name__ == "__main__":
 
     # for agreement_rate in ["certain", "ambiguous", "all"]:
     delphi_ruler.main(agreement_rate=1)
-        # print(delphi_ruler.main.__name__)
+    # print(delphi_ruler.main.__name__)
     # print(delphi_ruler.comet_cache["silently farting in a crowded room"])

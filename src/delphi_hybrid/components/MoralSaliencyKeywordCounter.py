@@ -3,8 +3,8 @@ import os
 import sys
 
 sys.path.append(os.getcwd())
-from scripts.utils.DelphiScorer import *
-from scripts.utils.CacheHandler.CacheHandler import *
+from src.delphi_hybrid.components.DelphiScorer import *
+from src.delphi_hybrid.components.CacheHandler.CacheHandler import *
 
 class MoralSaliencyKeywordCounter():
     def __init__(self, filename=data_base_path + f"cache/keywords.json"):

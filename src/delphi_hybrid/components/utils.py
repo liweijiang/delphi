@@ -8,8 +8,8 @@ import openai
 
 sys.path.append(os.getcwd())
 
-from scripts.utils.constants import *
-from scripts.utils.bank import *
+from src.delphi_hybrid.components.constants import *
+from src.delphi_hybrid.components.bank import *
 
 # sys.path.append("/Users/liweijiang/Desktop/delphi_algo/scripts/utils/")
 # from constants import *

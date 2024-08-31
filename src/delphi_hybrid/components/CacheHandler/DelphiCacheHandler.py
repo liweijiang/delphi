@@ -3,8 +3,8 @@ import os
 import sys
 
 sys.path.append(os.getcwd())
-from scripts.utils.DelphiScorer import *
-from scripts.utils.CacheHandler.CacheHandler import *
+from src.delphi_hybrid.components.DelphiScorer import *
+from src.delphi_hybrid.components.CacheHandler.CacheHandler import *
 
 class DelphiCacheHandler(CacheHandler):
     def __init__(self, filename=None, cache_dir="cache", model="t5-11b-1239200", device_id=0, server="local"): #"beaker_batch"
@@ -22,9 +22,6 @@ class DelphiCacheHandler(CacheHandler):
                 "text_label": text_label}
 
 if __name__ == "__main__":
-    # cache_handler = DelphiCacheHandler()
-    # instance = cache_handler.update_instance("is struggling to make ends meet")
-
     events = []
     for split in ["test", "validation"]:
         input_file = data_base_path + f"cache_norm_bank/events/clean_{split}.moral_acceptability.tsv"

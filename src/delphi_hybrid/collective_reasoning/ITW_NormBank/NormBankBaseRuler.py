@@ -6,16 +6,13 @@ from tqdm import tqdm
 
 sys.path.append(os.getcwd())
 
-from scripts.utils.utils import *
-from scripts.utils.constants import *
-from scripts.utils.bank import *
-from scripts.utils.MoralSaliencyKeywordIdentifier import *
-from scripts.utils.CompositionalityParser import *
-from scripts.utils.PersonDetector import *
+from src.delphi_hybrid.components.utils import *
+from src.delphi_hybrid.components.constants import *
+from src.delphi_hybrid.components.bank import *
+from src.delphi_hybrid.components.MoralSaliencyKeywordIdentifier import *
+from src.delphi_hybrid.components.CompositionalityParser import *
+from src.delphi_hybrid.components.PersonDetector import *
 
-# pd.set_option("display.max_columns", None)  # or 1000
-# pd.set_option("display.max_rows", None)  # or 1000
-# pd.set_option("display.max_colwidth", -1)  # or 199
 
 class BaseRuler():
     def __init__(self):

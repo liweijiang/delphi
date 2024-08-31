@@ -19,18 +19,6 @@ class EnsembleRuler(Ruler):
     def __init__(self, mode="hybrid"):
         super().__init__()
 
-        # self.vertex_weights = {"delphi": 4,
-        #                        "rule": 3,
-        #                        "constituent": 2}  # up-weight delphi predictions on event and paraphrases
-
-        # self.vertex_weights = {"delphi": 5,
-        #                        "rule": 1,
-        #                        "constituent": 1}  # up-weight delphi predictions on event and paraphrases
-
-        # self.vertex_weights = {"delphi": 2,
-        #                        "rule": 1,
-        #                        "constituent": 1}  # up-weight delphi predictions on event and paraphrases
-
         self.vertex_weights = {"delphi": 3,
                                "rule": 1,
                                "constituent": 1}  # up-weight delphi predictions on event and paraphrases
@@ -492,23 +480,6 @@ class EnsembleRuler(Ruler):
 
 
 if __name__ == "__main__":
-    # for k in class_label_preds[event]:
-    #     print(k, ":", len(class_label_preds[event][k]))
-    #
-    # print("class_label_pred selected", ":", len([i for i in class_label_preds[event]["class_label_preds"] if i != None]))
-    # print("is_affected selected", ":", len([i for i in class_label_preds[event]["is_affected"] if i]))
-
-    # print("-" * 20)
-    # print([i for i, is_affected in enumerate(class_label_preds[event]["is_affected"]) if is_affected])
-    # print(max_sat_selected_idx)
-    # print(max_sat_raw_vertex_id_assignment)
-
-    # for agreement_rate in ["certain", "ambiguous", "all"]:
-    # class_label_preds = delphi_ruler.get_rule_labels(agreement_rate=1)
-    # print(delphi_ruler.main.__name__)
-    # print(delphi_ruler.comet_cache["silently farting in a crowded room"])
-
-    # delphi_ruler.main_top_down_only(class_label_preds)
     for mode in ["bottom"]: # "hybrid", "top", "bottom" "hybrid", "top", "top", "bottom"
         delphi_ruler = EnsembleRuler(mode)
         print("-" * 50)

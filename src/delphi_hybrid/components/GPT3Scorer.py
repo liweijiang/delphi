@@ -1,8 +1,3 @@
-# import os
-# import sys
-# sys.path.append(os.getcwd())
-# sys.path.append(sys.path[0] + "/utils")
-
 from scripts.sub_event_extraction.utils.LMScorer import *
 
 
@@ -69,9 +64,6 @@ class GPT3Scorer(LMScorer):
             self.CONDITIONED_GEN_TOKEN + input_sequence[0].upper() + input_sequence[1:],
             self.CONDITIONED_GEN_TOKEN + input_sequence[0].upper() + input_sequence[1:] + ".",
             self.CONDITIONED_GEN_TOKEN + '"' + input_sequence[0].upper() + input_sequence[1:] + '"',
-            # CONDITIONED_GEN_TOKEN + input_sequence,
-            # CONDITIONED_GEN_TOKEN + "'" + input_sequence + ".'",
-            # CONDITIONED_GEN_TOKEN + input_sequence + "."
         ]
 
         return self._get_input_perplexity_combo(formatted_input_sequences, return_all_ppl)

@@ -6,16 +6,13 @@ from tqdm import tqdm
 
 sys.path.append(os.getcwd())
 
-from scripts.utils.utils import *
-from scripts.utils.constants import *
-from scripts.utils.bank import *
-from scripts.utils.MoralSaliencyKeywordIdentifier import *
-from scripts.utils.CompositionalityParser import *
-from scripts.utils.PersonDetector import *
+from src.delphi_hybrid.components.PersonDetector import *
+from src.delphi_hybrid.components.CompositionalityParser import *
+from src.delphi_hybrid.components.MoralSaliencyKeywordIdentifier import *
+from src.delphi_hybrid.components.bank import *
+from src.delphi_hybrid.components.constants import *
+from src.delphi_hybrid.components.utils import *
 
-# pd.set_option("display.max_columns", None)  # or 1000
-# pd.set_option("display.max_rows", None)  # or 1000
-# pd.set_option("display.max_colwidth", -1)  # or 199
 
 class BaseRuler():
     def __init__(self):
@@ -56,75 +53,76 @@ class BaseRuler():
         """
         Initialize constants
         """
-        self.all_event_types = ["event", "main_event", "main_event_main_clause", "main_event_relative_clause", "adjunct_event"]
+        self.all_event_types = [
+            "event", "main_event", "main_event_main_clause", "main_event_relative_clause", "adjunct_event"]
 
-        self.top_level_keywords_map = { "kill": ["kill", "lose life", "die", "death", "dead", "suicide", "murder",
-                                                 "assassinate", "killed"],
+        self.top_level_keywords_map = {"kill": ["kill", "lose life", "die", "death", "dead", "suicide", "murder",
+                                                "assassinate", "killed"],
 
-                                        "pain physical": ["harm", "danger", "torture", "attack", "hit", "violent",
-                                                          "hurt", "cruel", "injure", "hit", "destructive", "threaten",
-                                                          "aggressive", "pain", "rape", "revenge", "destroy", "weapon",
-                                                          "gun shot",
-                                                          "injured", "attacked", "threatened", "destroyed", "get hit",
-                                                          "get hurt", "raped"],
+                                       "pain physical": ["harm", "danger", "torture", "attack", "hit", "violent",
+                                                         "hurt", "cruel", "injure", "hit", "destructive", "threaten",
+                                                         "aggressive", "pain", "rape", "revenge", "destroy", "weapon",
+                                                         "gun shot",
+                                                         "injured", "attacked", "threatened", "destroyed", "get hit",
+                                                         "get hurt", "raped"],
 
-                                        "pain mental": ["anxious", "disgusted", "displeased", "hunger", "hungry",
-                                                        "shame", "remorse", "fear", "anger", "angry", "outrage",
-                                                        "guilt", "depress", "mad", "scare", "mental illness", "scare",
-                                                        "sad", "terrified", "terror", "scared"],
+                                       "pain mental": ["anxious", "disgusted", "displeased", "hunger", "hungry",
+                                                       "shame", "remorse", "fear", "anger", "angry", "outrage",
+                                                       "guilt", "depress", "mad", "scare", "mental illness", "scare",
+                                                       "sad", "terrified", "terror", "scared"],
 
-                                        "disable": ["blind", "deaf", "disable", "phobia", "addiction", "unconscious",
-                                                    "harm", "danger", "attack", "hit", "violent", "hurt", "destroy",
-                                                    "destructive", "attacked", "get hurt", "get hit"],
+                                       "disable": ["blind", "deaf", "disable", "phobia", "addiction", "unconscious",
+                                                   "harm", "danger", "attack", "hit", "violent", "hurt", "destroy",
+                                                   "destructive", "attacked", "get hurt", "get hit"],
 
-                                        "no freedom": ["coercion", "no consent", "restrain", "not freedom", "not privacy",
-                                                       "rape", "raped"],
+                                       "no freedom": ["coercion", "no consent", "restrain", "not freedom", "not privacy",
+                                                      "rape", "raped"],
 
-                                        "no pleasure": ["deprive"],
+                                       "no pleasure": ["deprive"],
 
-                                        "deceive": ["lie", "deceive"],
+                                       "deceive": ["lie", "deceive"],
 
-                                        "no promise": ["break promise", "renege", "betray",
-                                                    "betrayed"],
+                                       "no promise": ["break promise", "renege", "betray",
+                                                      "betrayed"],
 
-                                        "no cheat": ["adultery", "dishonest", "lose trust", "cheat", "unfair", "greedy",
-                                                  "cheated"], # , "no sex"
+                                       "no cheat": ["adultery", "dishonest", "lose trust", "cheat", "unfair", "greedy",
+                                                    "cheated"],  # , "no sex"
 
-                                        "sex": ["sex"],
+                                       "sex": ["sex"],
 
-                                        "not sex": ["not sex"],
+                                       "not sex": ["not sex"],
 
-                                        "no law": ["illegal", "jail", "crime", "prison", "arrest", "guilty", "violate",
-                                                   "violated", "arrested"],
+                                       "no law": ["illegal", "jail", "crime", "prison", "arrest", "guilty", "violate",
+                                                  "violated", "arrested"],
 
-                                        "duty": ["duty"],
+                                       "duty": ["duty"],
 
-                                        "conscious": ["conscious", "save life", "survive", "live life"],
+                                       "conscious": ["conscious", "save life", "survive", "live life"],
 
-                                        "able": ["ability", "intelligence", "talent", "protect", "safe",
-                                                 "welfare", "benefit", "take care of"],
+                                       "able": ["ability", "intelligence", "talent", "protect", "safe",
+                                                "welfare", "benefit", "take care of"],
 
-                                        "freedom": ["freedom", "privacy", "gain trust", "fair", "show respect",
-                                                    "gain respect"],
+                                       "freedom": ["freedom", "privacy", "gain trust", "fair", "show respect",
+                                                   "gain respect"],
 
-                                        "pleasure": ["pleasure", "enjoy", "smile", "joy", "happiness", "happy",
-                                                     "satisfaction", "satisfy"],
+                                       "pleasure": ["pleasure", "enjoy", "smile", "joy", "happiness", "happy",
+                                                    "satisfaction", "satisfy"],
 
-                                        "derivative good": ["health", "wealth", "knowledge", "love", "friendship",
-                                                            "peace", "education", "medicare", "have money",
-                                                            "have job"], # "spend money",
+                                       "derivative good": ["health", "wealth", "knowledge", "love", "friendship",
+                                                           "peace", "education", "medicare", "have money",
+                                                           "have job"],  # "spend money",
 
-                                        "derivative evil": ["war", "poverty", "slum", "lose money", "lose job"],
+                                       "derivative evil": ["war", "poverty", "slum", "lose money", "lose job"],
 
-                                        "unjust": ["discrimination", "bias", "favoritism", "hypocracy", "hypocrite",
-                                                      "racist", "sexist", "unjust", "unfair"],
+                                       "unjust": ["discrimination", "bias", "favoritism", "hypocracy", "hypocrite",
+                                                  "racist", "sexist", "unjust", "unfair"],
 
-                                        "just": ["justice", "fair", "honest", "upright", "equitable", "reasonable",
-                                                 "impartial", "unbiased"],
+                                       "just": ["justice", "fair", "honest", "upright", "equitable", "reasonable",
+                                                "impartial", "unbiased"],
 
-                                        "moral": ["moral", "ethical"],
+                                       "moral": ["moral", "ethical"],
 
-                                        "immoral": ["immoral", "unethical", "evil", "inhumane"],
+                                       "immoral": ["immoral", "unethical", "evil", "inhumane"],
                                        }
 
         self.all_keywords = self._init_all_keywords()
@@ -231,13 +229,16 @@ class BaseRuler():
                                         }
 
     def _init_cache_data(self):
-        self.paraphrases_cache = read_json(data_base_path + f"cache/paraphrases_filtered_by_nli.json")
+        self.paraphrases_cache = read_json(
+            data_base_path + f"cache/paraphrases_filtered_by_nli.json")
         print(f"* Paraphrases cache loaded! ({len(self.paraphrases_cache)})")
 
-        self.comet_cache = read_json(data_base_path + f"cache/comet_subset.json")
+        self.comet_cache = read_json(
+            data_base_path + f"cache/comet_subset.json")
         print(f"* Comet cache loaded! ({len(self.comet_cache)})")
 
-        self.delphi_cache = read_json(data_base_path + f"cache/delphi_subset.json")
+        self.delphi_cache = read_json(
+            data_base_path + f"cache/delphi_subset.json")
         print(f"* Delphi cache loaded! ({len(self.delphi_cache)})")
 
     def _init_utils(self):
@@ -252,12 +253,16 @@ class BaseRuler():
         Initialize gold data map and event maps
         """
         try:
-            df_data_gold_label = pd.read_csv(gold_data_path, sep=",", low_memory=False)
+            df_data_gold_label = pd.read_csv(
+                gold_data_path, sep=",", low_memory=False)
         except:
-            df_data_gold_label = pd.read_csv(gold_data_path, sep="\t", low_memory=False)
+            df_data_gold_label = pd.read_csv(
+                gold_data_path, sep="\t", low_memory=False)
 
-        df_data_gold_label = df_data_gold_label[~df_data_gold_label["event"].isin(self.events_to_exclude)]
-        df_data_gold_label = df_data_gold_label.drop_duplicates(subset=["event"])
+        df_data_gold_label = df_data_gold_label[~df_data_gold_label["event"].isin(
+            self.events_to_exclude)]
+        df_data_gold_label = df_data_gold_label.drop_duplicates(subset=[
+                                                                "event"])
 
         gold_data_list = df_data_gold_label.to_dict(orient="records")
         self.gold_data_map = {el["event"]: el for el in gold_data_list}
@@ -280,34 +285,30 @@ class BaseRuler():
         self.events_by_split = {split: {agreement_rate: [] for agreement_rate in all_agreement_rates} for split in
                                 all_splits}
         self.events_by_agreement_rate = {agreement_rate: {split: [] for split in all_splits} for agreement_rate in
-                                all_agreement_rates}
+                                         all_agreement_rates}
 
         for split in all_splits:
             for agreement_rate in [1, 0.8, 0.6]:
                 df_data_split = df_data_gold_label[df_data_gold_label["split"] == split]
-                df_data_split = df_data_split[df_data_split["agreement_rate"] == agreement_rate]
+                df_data_split = df_data_split[df_data_split["agreement_rate"]
+                                              == agreement_rate]
                 split_event = list(df_data_split["event"])
                 self.events_by_split[split][agreement_rate] = split_event
                 self.events_by_agreement_rate[agreement_rate][split] = split_event
 
             self.events_by_split[split]["all"] = self.events_by_split[split][1] + \
-                                                 self.events_by_split[split][0.6] + \
-                                                 self.events_by_split[split][0.8]
+                self.events_by_split[split][0.6] + \
+                self.events_by_split[split][0.8]
             self.events_by_split[split]["certain"] = self.events_by_split[split][1]
             self.events_by_split[split]["ambiguous"] = self.events_by_split[split][0.6] + \
-                                                       self.events_by_split[split][0.8]
+                self.events_by_split[split][0.8]
 
             self.events_by_agreement_rate["all"][split] = self.events_by_agreement_rate[1][split] + \
-                                                          self.events_by_agreement_rate[0.6][split] + \
-                                                          self.events_by_agreement_rate[0.8][split]
+                self.events_by_agreement_rate[0.6][split] + \
+                self.events_by_agreement_rate[0.8][split]
             self.events_by_agreement_rate["certain"][split] = self.events_by_agreement_rate[1][split]
             self.events_by_agreement_rate["ambiguous"][split] = self.events_by_agreement_rate[0.6][split] + \
-                                                                self.events_by_agreement_rate[0.8][split]
-        # for split in ["train", "test", "dev"]:
-        #     print("-" * 10, split, "-" * 10)
-        #     for i in [1, 0.8, 0.6, "all", "certain", "ambiguous"]:
-        #         print(i, "|", len(self.events_by_split[split][i]))
-        #         print(i, "|", len(self.events_by_agreement_rate[i][split]))
+                self.events_by_agreement_rate[0.8][split]
 
     def _init_raw_keywords_counts_map(self, is_save=False):
         """
@@ -320,7 +321,8 @@ class BaseRuler():
 
             def add_instance(e, keywords_cache, all_sequences):
                 e_comet_inferences = self.comet_cache[e]
-                moral_saliency_keywords_count_dict = self.saliency_identifier.identify_moral_saliency_keywords(e_comet_inferences)
+                moral_saliency_keywords_count_dict = self.saliency_identifier.identify_moral_saliency_keywords(
+                    e_comet_inferences)
                 keywords_cache[e] = moral_saliency_keywords_count_dict
                 all_sequences.append(e)
                 return keywords_cache, all_sequences
@@ -328,30 +330,38 @@ class BaseRuler():
             self.all_sequences = []
 
             for e in tqdm(self.events):
-                self.raw_keywords_counts_map, self.all_sequences = add_instance(e, self.raw_keywords_counts_map, self.all_sequences)
+                self.raw_keywords_counts_map, self.all_sequences = add_instance(
+                    e, self.raw_keywords_counts_map, self.all_sequences)
 
                 e_compositions_raw = self.constituents_map[e]
                 e_compositions = [e_compositions_raw[t] for t in self.all_event_types[1:] if
                                   e_compositions_raw[t] != None]
 
                 for ce in e_compositions:
-                    self.raw_keywords_counts_map, self.all_sequences = add_instance(ce, self.raw_keywords_counts_map, self.all_sequences)
+                    self.raw_keywords_counts_map, self.all_sequences = add_instance(
+                        ce, self.raw_keywords_counts_map, self.all_sequences)
 
                 for p in self.paraphrases_cache[e]:
-                    self.raw_keywords_counts_map, self.all_sequences = add_instance(p, self.raw_keywords_counts_map, self.all_sequences)
+                    self.raw_keywords_counts_map, self.all_sequences = add_instance(
+                        p, self.raw_keywords_counts_map, self.all_sequences)
 
-                    p_compositions_raw = self.compose_parser.get_parsed_event(p)
-                    p_compositions = [p_compositions_raw[t] for t in self.all_event_types[1:] if p_compositions_raw[t] != None]
+                    p_compositions_raw = self.compose_parser.get_parsed_event(
+                        p)
+                    p_compositions = [p_compositions_raw[t]
+                                      for t in self.all_event_types[1:] if p_compositions_raw[t] != None]
                     for cp in p_compositions:
-                        self.raw_keywords_counts_map, self.all_sequences = add_instance(cp, self.raw_keywords_counts_map, self.all_sequences)
+                        self.raw_keywords_counts_map, self.all_sequences = add_instance(
+                            cp, self.raw_keywords_counts_map, self.all_sequences)
 
             save_json(data_path, self.raw_keywords_counts_map)
-            print(f"* Moral Saliency Keywords map loaded! ({len(self.raw_keywords_counts_map)})")
+            print(
+                f"* Moral Saliency Keywords map loaded! ({len(self.raw_keywords_counts_map)})")
         else:
             self.raw_keywords_counts_map = read_json(data_path)
             self.all_sequences = list(self.raw_keywords_counts_map.keys())
 
-            print(f"* Moral Saliency Keywords map loaded! ({len(self.raw_keywords_counts_map)})")
+            print(
+                f"* Moral Saliency Keywords map loaded! ({len(self.raw_keywords_counts_map)})")
 
     def _init_all_keywords(self):
         _all_keywords = []
@@ -362,7 +372,6 @@ class BaseRuler():
         for k in _all_keywords:
             if " " not in k:
                 all_keywords.append("not " + k)
-                # print("not " + k)
 
         return _all_keywords + all_keywords
 
@@ -376,18 +385,18 @@ class BaseRuler():
     def _get_top_level_keyword_counts_map(self, top_level_keyword):
         top_level_keywords_counts_map = {}
         for event in self.raw_keywords_counts_map.keys():
-            selected_keywords_counts = self._get_event_top_level_keyword_counts(event, top_level_keyword)
-            top_level_keywords_counts_map[event] = sum([selected_keywords_counts[k] for k in selected_keywords_counts])
+            selected_keywords_counts = self._get_event_top_level_keyword_counts(
+                event, top_level_keyword)
+            top_level_keywords_counts_map[event] = sum(
+                [selected_keywords_counts[k] for k in selected_keywords_counts])
         return top_level_keywords_counts_map
 
     def _init_top_level_keywords_counts_maps(self):
-        # toggle = True
         for k in self.top_level_keywords_map:
-            self.top_level_keywords_counts_map[k] = self._get_top_level_keyword_counts_map(k)
-            # if toggle:
-            #     print(self.top_level_keywords_counts_map[k])
-            #     toggle = False
-        print(f"* Top Level Keywords Counts Map Loaded! ({len(self.top_level_keywords_counts_map)})")
+            self.top_level_keywords_counts_map[k] = self._get_top_level_keyword_counts_map(
+                k)
+        print(
+            f"* Top Level Keywords Counts Map Loaded! ({len(self.top_level_keywords_counts_map)})")
 
     def _init_binary_keywords_counts_map(self):
         for event in self.raw_keywords_counts_map:
@@ -401,15 +410,18 @@ class BaseRuler():
                                                              if (k in self.all_keywords and
                                                                  self.raw_keywords_binary_map[k] == -1)])
 
-        print(f"* Binary Keywords Counts Map Loaded! ({len(self.binary_keywords_counts_map)})")
+        print(
+            f"* Binary Keywords Counts Map Loaded! ({len(self.binary_keywords_counts_map)})")
 
     def _init_constituents_map(self, is_save=False):
         data_path = data_base_path + f"cache/constituents.json"
         if is_save:
             for event in tqdm(self.events):
-                self.constituents_map[event] = self.compose_parser.get_parsed_event(event)
+                self.constituents_map[event] = self.compose_parser.get_parsed_event(
+                    event)
                 for event_paraphrase in self.paraphrases_cache[event]:
-                    self.constituents_map[event_paraphrase] = self.compose_parser.get_parsed_event(event_paraphrase)
+                    self.constituents_map[event_paraphrase] = self.compose_parser.get_parsed_event(
+                        event_paraphrase)
             save_json(data_path, self.constituents_map)
             print(f"* Constituents map loaded! ({len(self.constituents_map)})")
         else:
@@ -422,7 +434,8 @@ class BaseRuler():
         """
         data_path = data_base_path + f"cache/average_paraphrases_filtered_by_nli.json"
         if is_save:
-            compiled_data = {"root_event": [], "type": [], "agreement_rate": [], "class_label_3_way": []}
+            compiled_data = {"root_event": [], "type": [],
+                             "agreement_rate": [], "class_label_3_way": []}
 
             for e_t in self.all_event_types:
                 compiled_data[e_t] = []
@@ -440,20 +453,29 @@ class BaseRuler():
 
                 compiled_data["root_event"].append(e)
                 compiled_data["type"].append("original")
-                compiled_data["agreement_rate"].append(self.gold_data_map[e]["agreement_rate"])
-                compiled_data["class_label_3_way"].append(self.gold_data_map[e]["class_label"])
+                compiled_data["agreement_rate"].append(
+                    self.gold_data_map[e]["agreement_rate"])
+                compiled_data["class_label_3_way"].append(
+                    self.gold_data_map[e]["class_label"])
 
                 for e_t in self.all_event_types:
                     e_e = e_compositions[e_t]
                     if e_e != None:
                         compiled_data[e_t].append(e_e)
-                        compiled_data[e_t + "_prob_0"].append(self.delphi_cache[e_e]["prob_0"])
-                        compiled_data[e_t + "_prob_1"].append(self.delphi_cache[e_e]["prob_1"])
-                        compiled_data[e_t + "_prob_minus_1"].append(self.delphi_cache[e_e]["prob_minus_1"])
-                        compiled_data[e_t + "_class_pred_3_way"].append(self.delphi_cache[e_e]["class_label"])
-                        compiled_data[e_t + "_text_pred"].append(self.delphi_cache[e_e]["text_label"])
-                        compiled_data[e_t + "_kill_count"].append(self.top_level_keywords_counts_map["kill"][e_e])
-                        compiled_data[e_t + "_save_life_count"].append(self.top_level_keywords_counts_map["save life"][e_e])
+                        compiled_data[e_t +
+                                      "_prob_0"].append(self.delphi_cache[e_e]["prob_0"])
+                        compiled_data[e_t +
+                                      "_prob_1"].append(self.delphi_cache[e_e]["prob_1"])
+                        compiled_data[e_t + "_prob_minus_1"].append(
+                            self.delphi_cache[e_e]["prob_minus_1"])
+                        compiled_data[e_t + "_class_pred_3_way"].append(
+                            self.delphi_cache[e_e]["class_label"])
+                        compiled_data[e_t + "_text_pred"].append(
+                            self.delphi_cache[e_e]["text_label"])
+                        compiled_data[e_t + "_kill_count"].append(
+                            self.top_level_keywords_counts_map["kill"][e_e])
+                        compiled_data[e_t + "_save_life_count"].append(
+                            self.top_level_keywords_counts_map["save life"][e_e])
                     else:
                         compiled_data[e_t].append("")
                         compiled_data[e_t + "_prob_0"].append(None)
@@ -470,29 +492,40 @@ class BaseRuler():
 
                     compiled_data["root_event"].append(e)
                     compiled_data["type"].append("paraphrase")
-                    compiled_data["agreement_rate"].append(self.gold_data_map[e]["agreement_rate"])
-                    compiled_data["class_label_3_way"].append(self.gold_data_map[e]["class_label"])
+                    compiled_data["agreement_rate"].append(
+                        self.gold_data_map[e]["agreement_rate"])
+                    compiled_data["class_label_3_way"].append(
+                        self.gold_data_map[e]["class_label"])
 
                     for e_t in self.all_event_types:
                         e_e = p_compositions[e_t]
                         if e_e != None:
                             compiled_data[e_t].append(e_e)
-                            compiled_data[e_t + "_prob_0"].append(self.delphi_cache[e_e]["prob_0"])
-                            compiled_data[e_t + "_prob_1"].append(self.delphi_cache[e_e]["prob_1"])
-                            compiled_data[e_t + "_prob_minus_1"].append(self.delphi_cache[e_e]["prob_minus_1"])
-                            compiled_data[e_t + "_class_pred_3_way"].append(self.delphi_cache[e_e]["class_label"])
-                            compiled_data[e_t + "_text_pred"].append(self.delphi_cache[e_e]["text_label"])
-                            compiled_data[e_t + "_kill_count"].append(self.top_level_keywords_counts_map["kill"][e_e])
-                            compiled_data[e_t + "_save_life_count"].append(self.top_level_keywords_counts_map["save life"][e_e])
+                            compiled_data[e_t + "_prob_0"].append(
+                                self.delphi_cache[e_e]["prob_0"])
+                            compiled_data[e_t + "_prob_1"].append(
+                                self.delphi_cache[e_e]["prob_1"])
+                            compiled_data[e_t + "_prob_minus_1"].append(
+                                self.delphi_cache[e_e]["prob_minus_1"])
+                            compiled_data[e_t + "_class_pred_3_way"].append(
+                                self.delphi_cache[e_e]["class_label"])
+                            compiled_data[e_t + "_text_pred"].append(
+                                self.delphi_cache[e_e]["text_label"])
+                            compiled_data[e_t + "_kill_count"].append(
+                                self.top_level_keywords_counts_map["kill"][e_e])
+                            compiled_data[e_t + "_save_life_count"].append(
+                                self.top_level_keywords_counts_map["save life"][e_e])
                         else:
                             compiled_data[e_t].append("")
                             compiled_data[e_t + "_prob_0"].append(None)
                             compiled_data[e_t + "_prob_1"].append(None)
                             compiled_data[e_t + "_prob_minus_1"].append(None)
-                            compiled_data[e_t + "_class_pred_3_way"].append(None)
+                            compiled_data[e_t +
+                                          "_class_pred_3_way"].append(None)
                             compiled_data[e_t + "_text_pred"].append(None)
                             compiled_data[e_t + "_kill_count"].append(None)
-                            compiled_data[e_t + "_save_life_count"].append(None)
+                            compiled_data[e_t +
+                                          "_save_life_count"].append(None)
 
             df_data = pd.DataFrame(compiled_data)
 
@@ -509,10 +542,12 @@ class BaseRuler():
                     ~df_data_e_paraphrase["event_text_pred"].str.lower().str.startswith("no,")]
 
                 # Get average scores cross paraphrases
-                avg_prob_minus_1 = df_data_e_paraphrase["event_prob_minus_1"].mean()
+                avg_prob_minus_1 = df_data_e_paraphrase["event_prob_minus_1"].mean(
+                )
                 avg_prob_0 = df_data_e_paraphrase["event_prob_0"].mean()
                 avg_prob_1 = df_data_e_paraphrase["event_prob_1"].mean()
-                avg_class_label = get_class_label_from_probs(avg_prob_minus_1, avg_prob_0, avg_prob_1)
+                avg_class_label = get_class_label_from_probs(
+                    avg_prob_minus_1, avg_prob_0, avg_prob_1)
 
                 self.average_paraphrases_map[e] = {"prob_minus_1": avg_prob_minus_1,
                                                    "prob_0": avg_prob_0,
@@ -520,14 +555,17 @@ class BaseRuler():
                                                    "class_label": avg_class_label}
 
             save_json(data_path, self.average_paraphrases_map)
-            print(f"* Average paraphrases map loaded! ({len(self.average_paraphrases_map)})")
+            print(
+                f"* Average paraphrases map loaded! ({len(self.average_paraphrases_map)})")
 
         else:
             self.average_paraphrases_map = read_json(data_path)
-            print(f"* Average paraphrases map loaded! ({len(self.average_paraphrases_map)})")
+            print(
+                f"* Average paraphrases map loaded! ({len(self.average_paraphrases_map)})")
 
     def print_accuracy(self, function, class_label_preds, class_label_targets, num_way):
-        is_correct = self.get_class_label_correct(class_label_preds, class_label_targets, num_way)
+        is_correct = self.get_class_label_correct(
+            class_label_preds, class_label_targets, num_way)
         acc = self.get_accuracy(is_correct)
         print("{}: {:5.2f}%".format(function.__name__, acc * 100))
 
@@ -540,8 +578,10 @@ class BaseRuler():
 
     def get_class_label_correct(self, class_label_preds, class_label_targets, num_way):
         if num_way == 2:
-            class_label_preds = [self._3_way_to_2_way_class_label(pred) for pred in class_label_preds]
-            class_label_targets = [self._3_way_to_2_way_class_label(target) for target in class_label_targets]
+            class_label_preds = [self._3_way_to_2_way_class_label(
+                pred) for pred in class_label_preds]
+            class_label_targets = [self._3_way_to_2_way_class_label(
+                target) for target in class_label_targets]
         return [int(class_label_preds[i] == class_label_targets[i]) for i in range(len(class_label_preds))]
 
     def _3_way_to_2_way_class_label(self, class_label):
@@ -550,9 +590,6 @@ class BaseRuler():
 
 if __name__ == "__main__":
     delphi_ruler = BaseRuler()
-    # print(delphi_ruler.raw_keywords_counts_map)
-    # top_level_keywords_counts_map = delphi_ruler._get_top_level_keyword_counts_map("kill")
-    # print(delphi_ruler.top_level_keywords_counts_map.keys())
 
     for e in delphi_ruler.events[:2]:
         print("-" * 20)

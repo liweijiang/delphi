@@ -1,12 +1,9 @@
 import os
 import sys
 from tqdm import tqdm
-# import inflect as inflect_pkg
 
 sys.path.append(os.getcwd())
-# sys.path.append("/Users/liweijiang/Desktop/delphi_algo/scripts/utils/")
-# from utils import *
-from scripts.utils.utils import *
+from src.delphi_hybrid.components.utils import *
 
 
 class CompositionalityParser():
@@ -16,16 +13,17 @@ class CompositionalityParser():
                                 # https://grammar.collinsdictionary.com/us/easy-learning/which-verbs-are-followed-by-the-to-infinitive-in-english
                                 "agree", "arrange", "attempt", "choose", "decide", "fail", "hope", "learn", "manage", "offer", "plan", "seem", "come",
                                 "how", "when", "which", "what", "struggle", "remember"]  # "lie",
-        # self.to_exclude_list_skip_obj = ["advise", "allow", "command", "forbid", "force", "invite", "order", "persuade", "remind", "teach", "tell"]
 
         self.phrases_to_replace = {"in order to": "to", "so that": "so"}
 
-        self.relative_pronounce_list = ["that", "which", "who", "whom", "where"]
+        self.relative_pronounce_list = [
+            "that", "which", "who", "whom", "where"]
 
         self.for_exclude_list = ["pay"]  # "lie",
 
         self.adj_exclude_list = ["nuclear"]
-        self.conj_additional_list = ["otherwise", "to", "for", "so", "because", "by", "or"] # , "if", "when"
+        self.conj_additional_list = [
+            "otherwise", "to", "for", "so", "because", "by", "or"]  # , "if", "when"
 
     def fix_event(self, event):
         for pr in self.phrases_to_replace:
@@ -81,7 +79,7 @@ class CompositionalityParser():
     def get_subevents(self, tokens, lemmatized_tokens, poss, deps):
         original_tokens = [None for _ in range(len(tokens))]
         conjs_idxs_global = [i for i, pos in enumerate(poss) if (
-                    (len(pos) > 3 and pos[-4:] == "CONJ") or lemmatized_tokens[i] in self.conj_additional_list)]
+            (len(pos) > 3 and pos[-4:] == "CONJ") or lemmatized_tokens[i] in self.conj_additional_list)]
         conjs_idxs_global += [len(original_tokens) - 1]
 
         idxs = [i for i in range(len(tokens))]
@@ -91,7 +89,7 @@ class CompositionalityParser():
 
             if (len(pos) > 3 and pos[-4:] == "CONJ") or token in self.conj_additional_list:
                 if i != 0 and lemmatized_tokens[i - 1] not in self.to_exclude_list \
-                          and poss[i - 1] not in ["ADJ"]:
+                        and poss[i - 1] not in ["ADJ"]:
                     # print(pos, token)
                     conj_idx_local = conjs_idxs_global.index(i)
                     # print(conj_idx_local)
@@ -117,9 +115,12 @@ class CompositionalityParser():
             if token in self.relative_pronounce_list and i != 0 and poss[i - 1] in ["NOUN"] \
                     or token in ["who", "whom"]:
                 return [
-                    [" ".join(tokens[:i])] + [l[:i] for l in subevent[1:-1]] + ["content"],
-                    [" ".join(tokens[i:i+1])] + [l[i:i+1] for l in subevent[1:-1]] + ["relative pronoun"],
-                    [" ".join(tokens[i+1:])] + [l[i+1:] for l in subevent[1:-1]] + ["relative clause"]
+                    [" ".join(tokens[:i])] + [l[:i]
+                                              for l in subevent[1:-1]] + ["content"],
+                    [" ".join(tokens[i:i+1])] + [l[i:i+1]
+                                                 for l in subevent[1:-1]] + ["relative pronoun"],
+                    [" ".join(tokens[i+1:])] + [l[i+1:]
+                                                for l in subevent[1:-1]] + ["relative clause"]
                 ]
 
     def _get_all_subevents(self, event):
@@ -132,7 +133,6 @@ class CompositionalityParser():
         deps = [_token[3] for _token in parsed_event["tokens"]["tokens_dict"]]
 
         return self.get_subevents(tokens, lemmatized_tokens, poss, deps)
-
 
     def glue_subevents(self, subevents):
         glued_subevent = subevents[0]
@@ -152,7 +152,8 @@ class CompositionalityParser():
 
         relative_clause = self._get_relative_clause(subevents[0])
         if relative_clause != None:
-            parsed_event["main_action"] = {"main_clause": relative_clause[0], "relative_pronoun": relative_clause[1], "relative_clause": relative_clause[2]}
+            parsed_event["main_action"] = {"main_clause": relative_clause[0],
+                                           "relative_pronoun": relative_clause[1], "relative_clause": relative_clause[2]}
         else:
             parsed_event["main_action"] = {"main_clause": subevents[0]}
 
@@ -182,7 +183,6 @@ class CompositionalityParser():
                     "connector": connector,
                     "other_action": other_action}
 
-
     def get_parsed_event(self, event):
         parsed_events = self._get_parsed_event(event, is_simple=True)
 
@@ -193,12 +193,13 @@ class CompositionalityParser():
         adjunct_event = parsed_events["other_action"]
 
         if main_event_main_clause != None and main_event_relative_clause != None:
-            main_event = main_event_main_clause + " " + main_event_relative_pronoun + " " + main_event_relative_clause
+            main_event = main_event_main_clause + " " + \
+                main_event_relative_pronoun + " " + main_event_relative_clause
 
         return {"main_event": main_event,
                 "main_event_main_clause": main_event_main_clause,
                 "main_event_relative_clause": main_event_relative_clause,
-                "adjunct_event": adjunct_event,}
+                "adjunct_event": adjunct_event, }
 
 
 if __name__ == "__main__":
@@ -206,7 +207,8 @@ if __name__ == "__main__":
 
     events = []
     for split in ["test", "validation"]:
-        input_file = data_base_path + f"cache_norm_bank/events/clean_{split}.moral_acceptability.tsv"
+        input_file = data_base_path + \
+            f"cache_norm_bank/events/clean_{split}.moral_acceptability.tsv"
         df_data = pd.read_csv(input_file, sep="\t")
         events += df_data["clean_event"].tolist()
 
@@ -216,5 +218,3 @@ if __name__ == "__main__":
         data_to_save[event] = parsed_event
 
     save_json(data_base_path + f"cache_norm_bank/constituents.json", data_to_save)
-
-

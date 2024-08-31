@@ -4,9 +4,9 @@ import json
 from tqdm import tqdm
 
 sys.path.append(os.getcwd())
-from scripts.utils.utils import *
-from scripts.utils.COMETGenerator import *
-from scripts.utils.CacheHandler.CacheHandler import *
+from src.delphi_hybrid.components.utils import *
+from src.delphi_hybrid.components.COMETGenerator import *
+from src.delphi_hybrid.components.CacheHandler.CacheHandler import *
 
 class COMETCacheHandler(CacheHandler):
     def __init__(self, filename="comet_subset", cache_dir="cache", device_id=0):
@@ -20,12 +20,6 @@ class COMETCacheHandler(CacheHandler):
 
 
 if __name__ == "__main__":
-    # events = []
-    # for split in ["test", "validation"]:
-    #     input_file = data_base_path + f"cache_norm_bank/events/clean_{split}.moral_acceptability.tsv"
-    #     df_data = pd.read_csv(input_file, sep="\t")
-    #     events += df_data["clean_event"].tolist()
-
     events = list(read_json(data_base_path + f"cache_norm_bank/all_sequences.json").keys())
     print(events)
 

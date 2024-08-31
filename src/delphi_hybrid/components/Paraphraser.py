@@ -5,8 +5,8 @@ sys.path.append(os.getcwd())
 import pandas as pd
 import re
 import random
-from scripts.utils.utils import *
-from scripts.utils.WANLIScorer import WANLIScorer
+from src.delphi_hybrid.components.utils import *
+from src.delphi_hybrid.components.WANLIScorer import WANLIScorer
 
 # S: Putting my mother in a retirement home.
 # A: Placing my mother in a retirement home.

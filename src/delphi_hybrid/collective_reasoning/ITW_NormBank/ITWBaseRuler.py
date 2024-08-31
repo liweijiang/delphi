@@ -6,16 +6,13 @@ from tqdm import tqdm
 
 sys.path.append(os.getcwd())
 
-from scripts.utils.utils import *
-from scripts.utils.constants import *
-from scripts.utils.bank import *
-from scripts.utils.MoralSaliencyKeywordIdentifier import *
-from scripts.utils.CompositionalityParser import *
-from scripts.utils.PersonDetector import *
+from src.delphi_hybrid.components.utils import *
+from src.delphi_hybrid.components.constants import *
+from src.delphi_hybrid.components.bank import *
+from src.delphi_hybrid.components.MoralSaliencyKeywordIdentifier import *
+from src.delphi_hybrid.components.CompositionalityParser import *
+from src.delphi_hybrid.components.PersonDetector import *
 
-# pd.set_option("display.max_columns", None)  # or 1000
-# pd.set_option("display.max_rows", None)  # or 1000
-# pd.set_option("display.max_colwidth", -1)  # or 199
 
 class BaseRuler():
     def __init__(self):
@@ -351,9 +348,6 @@ class BaseRuler():
             self.raw_keywords_counts_map = read_json(data_path)
             self.all_sequences = list(self.raw_keywords_counts_map.keys())
 
-            # for e in self.raw_keywords_counts_map:
-            #     print(e, self.raw_keywords_counts_map[e])
-
             print(f"* Moral Saliency Keywords map loaded! ({len(self.raw_keywords_counts_map)})")
 
     def _init_all_keywords(self):
@@ -384,12 +378,8 @@ class BaseRuler():
         return top_level_keywords_counts_map
 
     def _init_top_level_keywords_counts_maps(self):
-        # toggle = True
         for k in self.top_level_keywords_map:
             self.top_level_keywords_counts_map[k] = self._get_top_level_keyword_counts_map(k)
-            # if toggle:
-            #     print(self.top_level_keywords_counts_map[k])
-            #     toggle = False
         print(f"* Top Level Keywords Counts Map Loaded! ({len(self.top_level_keywords_counts_map)})")
 
     def _init_binary_keywords_counts_map(self):

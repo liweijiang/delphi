@@ -3,8 +3,8 @@ import sys
 import argparse
 
 sys.path.append(os.getcwd())
-from scripts.utils.Paraphraser import *
-from scripts.utils.CacheHandler.CacheHandler import *
+from src.delphi_hybrid.components.Paraphraser import *
+from src.delphi_hybrid.components.CacheHandler.CacheHandler import *
 
 class ParaphraseCacheHandler(CacheHandler):
     def __init__(self, filename=None, cache_dir="cache", num_paraphrases=8):

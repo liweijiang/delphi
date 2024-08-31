@@ -15,7 +15,6 @@ class DelphiScorer:
         if model == "t5-large":
             MODEL_BASE = "t5-large"
             MODEL_LOCATION = "/net/nfs.cirrascale/mosaic/liweij/model/large_commonsense_morality_hf"
-            # MODEL_LOCATION = "/net/nfs2.corp/mosaic/home/ronanlb/t5_models/large_commonsense_morality_hf"
             self.class_token_pos = 4
             self.sep_tokens = ["<unk> /class> <unk> text>", " class>", "<unk> /text>"]
 
@@ -27,7 +26,6 @@ class DelphiScorer:
 
         elif model == "t5-11b-1239200":
             MODEL_BASE = "t5-11b"
-            # MODEL_LOCATION = "/net/nfs2.corp/mosaic/home/ronanlb/t5_models/11b_commonsense_morality_v4_hf"
             if server == "beaker_batch":
                 MODEL_LOCATION = "/model/delphi11b"
             else:
@@ -99,8 +97,6 @@ class DelphiScorer:
                                    truncation=True,
                                    return_tensors='pt').to(self.device).input_ids
         outputs = self.model.generate(input_ids,
-                                      # output_scores=True,
-                                      # return_dict_in_generate=True,
                                       num_beams=num_beams,
                                       max_length=max_length,
                                       num_return_sequences=num_return_sequences,)

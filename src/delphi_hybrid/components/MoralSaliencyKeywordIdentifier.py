@@ -4,8 +4,8 @@ import random
 
 sys.path.append(os.getcwd())
 
-from scripts.utils.utils import *
-# from scripts.utils.bank import *
+from src.delphi_hybrid.components.utils import *
+# from src.delphi_hybrid.components.bank import *
 
 moral_saliency_keywords = ["loyal", "welfare", "benefit", "authority", "dignity", "assassinate",
                            "greedy", "weapon", "dishonest", "guilty", "sad", "destructive",
