@@ -9,7 +9,7 @@ Liwei Jiang, Jena D. Hwang, Chandra Bhagavatula, Ronan Le Bras, Jenny Liang, Jes
 ## The Theoretical and Computational Frameworks of Delphi
 
  <details close>
-  <summary><b>Details:</b></summary>
+  <summary><b>Details of the Figure:</b></summary>
 
  > (a) The theoretical framework of ethics proposed by the prominent moral philosopher John Rawls. In 1951, Rawls proposed a “decision procedure of ethics” that takes a bottom-up approach to capture patterns of human ethics via crowd- sourcing moral opinions of a wide variety of people. Later in 1971, Rawls complemented the theoretial procedure with top-down constraints in his most famous work, A Theory of Justice. Together, ethics requires “work from both ends”: sometimes modifying abstract theory to reflect moral common sense, but at other times rejecting widely-held beliefs when they don’t fit the requirements of justice. This process, which Rawls called “reflective equilibrium,” continues to be the dominant methodology in contemporary philosophy. (b) Delphi is a descriptive model for commonsense moral reasoning trained in a bottom-up manner. Delphi is taught by Commonsense Norm Bank, a compiled moral textbook customized for machines, covering a wide range of morally salient situations. Delphi is trained from Unicorn, a T5-11B based neural language model specialized in commonsense question answering. Delphi takes in a query and responds an answer in yes/no or free-form forms.
 
@@ -39,7 +39,7 @@ Liwei Jiang, Jena D. Hwang, Chandra Bhagavatula, Ronan Le Bras, Jenny Liang, Jes
 ## Main Results of Delphi
 
  <details close>
-  <summary><b>Details:</b></summary>
+  <summary><b>Details of the Figure:</b></summary>
 
  > (a) Delphi achieves better performance on Norm Bank comparing to GPT-3 baselines. (b) Comparing the effect of the size of the base T5 model. (c) Ablation results showing the scale of training data improves Delphi’s learning. (d) Ablation results showing the compositionality of training instances improves Delphi’s learning. (e) Delphi, with minimal supervisions, outperforms baseline models on hate speech detection under both in-distribution and out-of-distribution settings. (g) Plugging Delphi into language generation models helps improve the prosocial implication scores of the generated stories, without sacrificing the language quality. (g) Delphi outperforms other baselines on transferring knowledge to specific theoretically motivated moral frameworks.
 
@@ -51,7 +51,7 @@ Liwei Jiang, Jena D. Hwang, Chandra Bhagavatula, Ronan Le Bras, Jenny Liang, Jes
 ## Social Bias Evaluation Results of Delphi
 
  <details close>
-  <summary><b>Details:</b></summary>
+  <summary><b>Details of the Figure:</b></summary>
 
  > (a) Results for the Universal Declaration of Human Rights probing, including top identities that Delphi shows biases against and their level of biases, and the average % error for each identity group. (b) Delphi and Delphi+’s performance under current-world and ideal-world settings. Statistical significance test is performed between Delphi under the current-world compared to other models or settings.
 
@@ -63,7 +63,7 @@ Liwei Jiang, Jena D. Hwang, Chandra Bhagavatula, Ronan Le Bras, Jenny Liang, Jes
 
 
  <details close>
-  <summary><b>Details:</b></summary>
+  <summary><b>Details of the Figure:</b></summary>
 
 > (a) A hybrid system that incorporates an optional symbolically guided rea- soning mechanism to complement the neural language model based Delphi. (b) An example of the moral constraint graph produced by Delphihybrid for the event “Mass genocide for greater good.” Nodes denote judgments derived either from top-down moral principles or bottom-up Delphi. Edges denote logical violations (i.e., identity, entailment, and contradiction) between nodes. ❌ denotes inconsistent nodes identified by the constrained optimization step. Note that each top-down moral principle may result in multiple nodes depending on engineering details (e.g., the same rule “Do not kill” applied at the full event level or constituent level). The final judgment is negative.
 
