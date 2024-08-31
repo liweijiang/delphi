@@ -9,7 +9,7 @@ As our society adopts increasingly powerful AI systems for pervasive use, there 
 
 <img src=assets/overall.png width=1200/>
 
-<img src=assets/norm_bank_content.png width=1200/>
+<img src=assets/norm_bank_content.png width=800/>
 
 <img src=assets/examples.png width=1200/>
 
@@ -17,7 +17,7 @@ As our society adopts increasingly powerful AI systems for pervasive use, there 
 
 <img src=assets/bias_results.png width=1200/>
 
-<img src=assets/delphi)hybrid.png width=1200/>
+<img src=assets/delphi_hybrid.png width=1200/>
 
 
 ## Codebase Structure
