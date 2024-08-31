@@ -1,4 +1,4 @@
-# Can Machines Learn Morality? The Delphi Experiment
+# An Empirical Investigation of Machines' Capabilities for Moral Judgment with the Delphi Experiment
 
 This is the official repository for our preprint:
 
@@ -30,6 +30,9 @@ This codebase contains the training and evaluation code for Delphi, Delphi+, and
 
 - `src/delphi/prepare_data`: scripts for preparing test data for Delphi-Hybrid experiments.
 
+### Datasheet:
+
+- `data/datasheet.md`: the datasheet for the Commonsense Norm Bank dataset.
 
 ## Data and Model Access
 You can access the Commonsense Norm Bank dataset by [filling out this form](https://forms.gle/VoAVuPUJFNChWhSj8).
@@ -38,7 +41,7 @@ For accessing the Delphi model checkpoints and API calls please feel free to rea
 
 If you find our paper or data useful, please cite the paper:
 ```
-@article{jiang2022machines,
+@article{jiangdelphi2022,
       title={Can Machines Learn Morality? The Delphi Experiment}, 
       author={Liwei Jiang and Jena D. Hwang and Chandra Bhagavatula and Ronan Le Bras and Jenny Liang and Jesse Dodge and Keisuke Sakaguchi and Maxwell Forbes and Jon Borchardt and Saadia Gabriel and Yulia Tsvetkov and Oren Etzioni and Maarten Sap and Regina Rini and Yejin Choi},
       year={2022},
