@@ -6,6 +6,20 @@ Liwei Jiang, Jena D. Hwang, Chandra Bhagavatula, Ronan Le Bras, Jenny Liang, Jes
 
 As our society adopts increasingly powerful AI systems for pervasive use, there are growing concerns about machine morality---or lack thereof. Millions of users already rely upon the outputs of AI systems, such as chatbots, as decision aids. Meanwhile, AI researchers continue to grapple with the challenge of aligning these systems with human morality and values. In response to this challenge, we build and test Delphi, an open-source AI system trained to predict human moral judgments. The computational framework of Delphi is grounded in the philosophical moral framework proposed by the prominent moral philosopher John Rawls. Our results speak to the promises and limits of machine's capabilities to learn about human morality. On the one hand, Delphi demonstrates improved generalization capabilities over those exhibited by off-the-shelf neural language models. At the same time, Delphi's failures also underscore important challenges in this arena. For instance, Delphi has limited cultural awareness and is susceptible to pervasive biases. Despite these shortcomings, we demonstrate several compelling use cases of Delphi, including incorporating it as a component within an ensemble of AI systems. Finally, we computationally demonstrate the potential of Rawls' prospect of hybrid approaches for reliable moral reasoning, inspiring future research in computational morality.
 
+
+<img src=assets/overall.png width=1200/>
+
+<img src=assets/norm_bank_content.png width=1200/>
+
+<img src=assets/examples.png width=1200/>
+
+<img src=assets/main_results.png width=1200/>
+
+<img src=assets/bias_results.png width=1200/>
+
+<img src=assets/delphi)hybrid.png width=1200/>
+
+
 ## Codebase Structure
 
 This codebase contains the training and evaluation code for Delphi, Delphi+, and the Delphi-Hybrid system.
