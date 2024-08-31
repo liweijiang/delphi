@@ -2,13 +2,26 @@
 
 This is the official repository for our preprint:
 
-Liwei Jiang, Jena D. Hwang, Chandra Bhagavatula, Ronan Le Bras, Jenny Liang, Jesse Dodge, Keisuke Sakaguchi, Maxwell Forbes, Jon Borchardt, Saadia Gabriel, Yulia Tsvetkov, Oren Etzioni, Maarten Sap, Regina Rini, Yejin Choi. [Can Machines Learn Morality? The Delphi Experiment](https://arxiv.org/abs/2110.07574). 2022. 
+Liwei Jiang, Jena D. Hwang, Chandra Bhagavatula, Ronan Le Bras, Jenny Liang, Jesse Dodge, Keisuke Sakaguchi, Maxwell Forbes, Jon Borchardt, Saadia Gabriel, Yulia Tsvetkov, Oren Etzioni, Maarten Sap, Regina Rini, Yejin Choi. [An Empirical Investigation of Machines' Capabilities for Moral Judgment with the Delphi Experiment](https://arxiv.org/abs/2110.07574).
 
-As AI systems become increasingly powerful and pervasive, there are growing concerns about machines’ morality—or lack thereof. Existing AI systems deployed to millions of users are already making decisions loaded with moral implications, yet, moral questions are among the most intensely debated the world over. This poses a seemingly impossible challenge: teaching machines morality, while humanity continues to grapple with it.
+As our society adopts increasingly powerful AI systems for pervasive use, there are growing concerns about machine morality---or lack thereof. Millions of users already rely upon the outputs of AI systems, such as chatbots, as decision aids. Meanwhile, AI researchers continue to grapple with the challenge of aligning these systems with human morality and values. In response to this challenge, we build and test Delphi, an open-source AI system trained to predict human moral judgments. The computational framework of Delphi is grounded in the philosophical moral framework proposed by the prominent moral philosopher John Rawls. Our results speak to the promises and limits of machine's capabilities to learn about human morality. On the one hand, Delphi demonstrates improved generalization capabilities over those exhibited by off-the-shelf neural language models. At the same time, Delphi's failures also underscore important challenges in this arena. For instance, Delphi has limited cultural awareness and is susceptible to pervasive biases. Despite these shortcomings, we demonstrate several compelling use cases of Delphi, including incorporating it as a component within an ensemble of AI systems. Finally, we computationally demonstrate the potential of Rawls' prospect of hybrid approaches for reliable moral reasoning, inspiring future research in computational morality.
 
-To explore this challenge, we introduce Delphi, an experimental framework based on deep neural networks and trained to predict human moral judgments. Empirical results shed novel insights on the promises and limits of machine ethics. Delphi demonstrates strong generalization capabilities in the face of novel ethical situations, while off-the-shelf neural network models exhibit markedly poor judgment, confirming the need for explicitly teaching machines a moral sense.
+## Codebase Structure
 
-Yet, Delphi is not perfect, exhibiting susceptibility to pervasive biases and inconsistencies. Despite these shortcomings, we demonstrate positive use cases of Delphi, including using it as a component model within other imperfect AI systems. Importantly, we interpret the operationalization
+This codebase contains the training and evaluation code for Delphi, Delphi+, and the Delphi-Hybrid system.
+
+### Delphi:
+`src/delphi/evaluate`: scripts for evaluating the Delphi models on the yes/no QA and freeform QA tasks, as well as downstream tasks like Hate Speech Detection.
+`src/delphi/train`: the scripts for finetuning T5 for Delphi.
+
+### Delphi+:
+`src/delphi_plus/evaluate`: scripts for evaluating the Delphi+ models on the yes/no QA and freeform QA tasks, as well as downstream tasks like Hate Speech Detection.
+`src/delphi/train`: the scripts for finetuning T5 for Delphi+.
+
+### Delphi-Hybrid:
+`src/delphi_plus/collective_reasoning`: codebase for the collective reasoning component of Delphi-Hybrid.
+`src/delphi/components`: components of the Delphi-Hybrid system.
+`src/delphi/prepare_data`: scripts for preparing test data for Delphi-Hybrid experiments.
 
 
 ## Data and Model Access
