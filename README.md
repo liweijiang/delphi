@@ -1,8 +1,30 @@
 # An Empirical Investigation of Machines' Capabilities for Moral Judgment with the Delphi Experiment
 
-This is the official repository for our preprint:
+<a href="https://arxiv.org/abs/2110.07574"><img src="https://img.shields.io/badge/📝-paper-blue"></a>
 
-Liwei Jiang, Jena D. Hwang, Chandra Bhagavatula, Ronan Le Bras, Jenny Liang, Jesse Dodge, Keisuke Sakaguchi, Maxwell Forbes, Jon Borchardt, Saadia Gabriel, Yulia Tsvetkov, Oren Etzioni, Maarten Sap, Regina Rini, Yejin Choi. [An Empirical Investigation of Machines' Capabilities for Moral Judgment with the Delphi Experiment](https://arxiv.org/abs/2110.07574).
+<!-- Liwei Jiang, Jena D. Hwang, Chandra Bhagavatula, Ronan Le Bras, Jenny Liang, Jesse Dodge, Keisuke Sakaguchi, Maxwell Forbes, Jon Borchardt, Saadia Gabriel, Yulia Tsvetkov, Oren Etzioni, Maarten Sap, Regina Rini, Yejin Choi. [An Empirical Investigation of Machines' Capabilities for Moral Judgment with the Delphi Experiment](https://arxiv.org/abs/2110.07574). -->
+
+
+**Authors:**
+[Liwei Jiang](https://liweijiang.me),
+[Jena D. Hwang](https://jenahwang.github.io),
+[Chandra Bhagavatula](https://www.chandrab.page),
+[Ronan Le Bras](https://rlebras.github.io),
+[Jenny Liang](https://jennyliang.me),
+[Sydney Levine](https://sites.google.com/site/sydneymlevine/),
+[Jesse Dodge](https://jessedodge.github.io),
+[Keisuke Sakaguchi](https://keisuke-sakaguchi.github.io),
+[Maxwell Forbes](https://maxwellforbes.com),
+[Taylor Sorensen](https://tsor13.github.io),
+[Jon Borchardt](https://www.linkedin.com/in/borchardt/),
+[Jack Hessel](https://jmhessel.com),
+[Saadia Gabriel](https://saadiagabriel.com),
+[Yulia Tsvetkov](https://homes.cs.washington.edu/~yuliats/),
+[Oren Etzioni](https://homes.cs.washington.edu/~etzioni/site/),
+[Maarten Sap](http://maartensap.com),
+[Regina Rini](https://reginarini.net),
+[Yejin Choi](https://homes.cs.washington.edu/~yejin/),
+
 
 > As our society adopts increasingly powerful AI systems for pervasive use, there are growing concerns about machine morality---or lack thereof. Millions of users already rely upon the outputs of AI systems, such as chatbots, as decision aids. Meanwhile, AI researchers continue to grapple with the challenge of aligning these systems with human morality and values. In response to this challenge, we build and test Delphi, an open-source AI system trained to predict human moral judgments. The computational framework of Delphi is grounded in the philosophical moral framework proposed by the prominent moral philosopher John Rawls. Our results speak to the promises and limits of machine's capabilities to learn about human morality. On the one hand, Delphi demonstrates improved generalization capabilities over those exhibited by off-the-shelf neural language models. At the same time, Delphi's failures also underscore important challenges in this arena. For instance, Delphi has limited cultural awareness and is susceptible to pervasive biases. Despite these shortcomings, we demonstrate several compelling use cases of Delphi, including incorporating it as a component within an ensemble of AI systems. Finally, we computationally demonstrate the potential of Rawls' prospect of hybrid approaches for reliable moral reasoning, inspiring future research in computational morality.
 
