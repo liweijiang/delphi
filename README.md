@@ -21,12 +21,26 @@ As our society adopts increasingly powerful AI systems for pervasive use, there 
 
 </details>
 
+<details close>
+  <summary><b>Examples from Delphi:</b></summary>
 
-
+> Delphi shows impressive ability to generalize to unseen situations beyond Commonsense Norm Bank, and is robust to adjust its judgment against changing contexts. Colors of labels indicate Delphi’s classification results (green: positive, gray: neutral, red: negative). Textual labels come from Delphi’s open-text responses.
 
 <img src=assets/examples.png width=800/>
 
+</details>
+
+
+## Main Results of Delphi
+
+ > (a) Delphi achieves better performance on Norm Bank comparing to GPT-3 baselines. (b) Comparing the effect of the size of the base T5 model. (c) Ablation results showing the scale of training data improves Delphi’s learning. (d) Ablation results showing the compositionality of training instances improves Delphi’s learning. (e) Delphi, with minimal supervisions, outperforms baseline models on hate speech detection under both in-distribution and out-of-distribution settings. (g) Plugging Delphi into language generation models helps improve the prosocial implication scores of the generated stories, without sacrificing the language quality. (g) Delphi outperforms other baselines on transferring knowledge to specific theoretically motivated moral frameworks. The asterisks (*), (**), and (***) denote statistical significance at p < 0.05, p < 0.01 and p < 0.001 respectively. Error bars denote the 95% confidence interval of the mean based on bootstrapping.
+
 <img src=assets/main_results.png width=800/>
+
+
+## Social Bias Evaluation Results of Delphi
+
+ > (a) Results for the Universal Declaration of Human Rights probing, including top identities that Delphi shows biases against and their level of biases, and the average % error for each identity group. (b) Delphi and Delphi+’s performance under current-world and ideal-world settings. Statistical significance test is performed between Delphi under the current-world compared to other models or settings. The asterisks (*), (**), and (***) denote statistical significance at p < 0.05, p < 0.01 and p < 0.001 respectively. Error bars denote the 95% confidence interval of the mean based on bootstrapping.
 
 <img src=assets/bias_results.png width=800/>
 
