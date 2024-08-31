@@ -44,6 +44,10 @@ As our society adopts increasingly powerful AI systems for pervasive use, there 
 
 <img src=assets/bias_results.png width=800/>
 
+## Social Bias Evaluation Results of Delphi
+
+> (a) A hybrid system that incorporates an optional symbolically guided rea- soning mechanism to complement the neural language model based Delphi. (b) An example of the moral constraint graph produced by Delphihybrid for the event “Mass genocide for greater good.” Nodes denote judgments derived either from top-down moral principles or bottom-up Delphi. Edges denote logical violations (i.e., identity, entailment, and contradiction) between nodes. ❌ denotes inconsistent nodes identified by the constrained optimization step. Note that each top-down moral principle may result in multiple nodes depending on engineering details (e.g., the same rule “Do not kill” applied at the full event level or constituent level). The final judgment is negative.
+
 <img src=assets/delphi_hybrid.png width=800/>
 
 
