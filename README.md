@@ -8,17 +8,17 @@ As our society adopts increasingly powerful AI systems for pervasive use, there 
 
 > The Theoretical and Computational Frameworks of Delphi (a) The theoretical framework of ethics proposed by the prominent moral philosopher John Rawls. In 1951, Rawls proposed a “decision procedure of ethics” that takes a bottom-up approach to capture patterns of human ethics via crowd- sourcing moral opinions of a wide variety of people. Later in 1971, Rawls complemented the theoretial procedure with top-down constraints in his most famous work, A Theory of Justice. Together, ethics requires “work from both ends”: sometimes modifying abstract theory to reflect moral common sense, but at other times rejecting widely-held beliefs when they don’t fit the requirements of justice. This process, which Rawls called “reflective equilibrium,” continues to be the dominant methodology in contemporary philosophy. (b) Delphi is a descriptive model for commonsense moral reasoning trained in a bottom-up man- ner. Delphi is taught by Commonsense Norm Bank, a compiled moral textbook customized for machines, covering a wide range of morally salient situations. Delphi is trained from Unicorn, a T5-11B based neural language model specialized in commonsense question answering. Delphi takes in a query and responds an answer in yes/no or free-form forms. Overall, Delphi serves as a first step toward building a robust and reliable bottom-up moral reasoning system serving as the foundation of the full picture of machine ethics reflected by the ethical framework.
 
-<img src=assets/overall.png width=1200/>
+<img src=assets/overall.png width=800/>
 
-<img src=assets/norm_bank_content.png width=800/>
+<img src=assets/norm_bank_content.png width=600/>
 
-<img src=assets/examples.png width=1200/>
+<img src=assets/examples.png width=800/>
 
-<img src=assets/main_results.png width=1200/>
+<img src=assets/main_results.png width=800/>
 
-<img src=assets/bias_results.png width=1200/>
+<img src=assets/bias_results.png width=800/>
 
-<img src=assets/delphi_hybrid.png width=1200/>
+<img src=assets/delphi_hybrid.png width=800/>
 
 
 ## Codebase Structure
